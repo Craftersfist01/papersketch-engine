@@ -35,6 +35,8 @@ PC-selected style, and sends only normalized pointer input back to the host.
 and provides QR-ready connection descriptors without coupling the protocol to a
 specific WebSocket server implementation. Its optional Node host validates the
 descriptor token before exposing an accepted connection as a `MessageTransport`.
+`connection-ui` exposes framework-neutral models for rendering the host QR code
+and driving the iPad scan/connect state machine.
 
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
