@@ -7,7 +7,10 @@
   "references": [
     { "path": "./packages/project-schema" },
     { "path": "./packages/engine-core" },
-    { "path": "./packages/runtime" }
+    { "path": "./packages/runtime" },
+    { "path": "./packages/assets" },
+    { "path": "./packages/renderer-canvas" },
+    { "path": "./packages/renderer-svg" }
   ]
 }
 

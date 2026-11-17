@@ -1,0 +1,10 @@
+{
+  "name": "@papersketch/assets",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "dependencies": {
+    "@papersketch/project-schema": "0.1.0"
+  }
+}
+

@@ -9,6 +9,10 @@ It also validates asset and component references and provides migrations between
 
 `runtime` assembles a project with an engine host. It is the integration boundary for applications and later renderers.
 
+`assets` provides cached, deduplicated loading through an injected source. The Canvas
+and SVG renderer packages consume the engine's `RenderFrame` contract and remain
+replaceable implementations.
+
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
 ## Initial decisions
