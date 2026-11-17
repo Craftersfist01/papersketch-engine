@@ -18,6 +18,13 @@ export interface AssetDefinition {
   readonly hash?: string;
 }
 
+export interface ProjectMetadata {
+  readonly description?: string;
+  readonly author?: string;
+  readonly engineVersion?: string;
+  readonly tags?: readonly string[];
+}
+
 export interface LayerDefinition {
   readonly id: string;
   readonly name: string;
@@ -70,6 +77,7 @@ export interface ProjectManifest {
   readonly scenes: readonly SceneDefinition[];
   readonly components: readonly ComponentDefinition[];
   readonly assets: readonly AssetDefinition[];
+  readonly metadata?: ProjectMetadata;
 }
 
 export interface SceneDefinition {

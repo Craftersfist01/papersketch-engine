@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { GameEventBus, GameState } from "./index.js";
+import { GameEventBus, GameState, ProjectCommandBus } from "./index.js";
 
 describe("game SDK primitives", () => {
   it("emits typed game events and supports unsubscribe", () => {
@@ -20,5 +20,21 @@ describe("game SDK primitives", () => {
     state.update((current) => ({ score: current.score + 1 }));
 
     expect(state.get()).toEqual({ score: 2 });
+  });
+
+  it("dispatches project commands and supports unsubscribe", () => {
+    const bus = new ProjectCommandBus();
+    const listener = vi.fn();
+    const unsubscribe = bus.on(listener);
+    bus.dispatch({ type: "set-layer", payload: { visible: false } });
+    unsubscribe();
+    bus.dispatch({ type: "ignored" });
+
+    expect(listener).toHaveBeenCalledOnce();
+    expect(listener).toHaveBeenCalledWith({
+      type: "set-layer",
+      payload: { visible: false }
+    });
+    expect(() => bus.dispatch({ type: " " })).toThrow("non-empty string");
   });
 });

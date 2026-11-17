@@ -25,6 +25,8 @@
 - Renderer drawing layers for Canvas and SVG, including rotated marks and eraser handling.
 - Layer-state transitions with easing and bounded multi-pointer sessions for interaction handling.
 - Editor layer selection/editing, render-neutral scene previews, and layer-tree models.
+- Asset fingerprints and cache invalidation, fingerprint-checked component bundles,
+  optional project metadata, and a typed project command bus.
 
 ### Changed
 

@@ -1,4 +1,5 @@
 import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
+import { createAssetFingerprint } from "@papersketch/assets";
 import {
   parseProjectManifest,
   type AssetDefinition,
@@ -12,6 +13,12 @@ const MAX_BUNDLE_BYTES = 10 * 1024 * 1024;
 function assertSafeAssetId(assetId: string): void {
   if (!/^[A-Za-z0-9._-]+$/.test(assetId)) {
     throw new TypeError(`Unsafe component asset id "${assetId}"`);
+  }
+}
+
+function assertAssetHash(asset: AssetDefinition, data: Uint8Array): void {
+  if (asset.hash && asset.hash !== createAssetFingerprint(data)) {
+    throw new TypeError(`Asset "${asset.id}" fingerprint does not match its manifest hash`);
   }
 }
 
@@ -102,6 +109,7 @@ export class ComponentLibrary {
       assertSafeAssetId(asset.id);
       const data = assetData[asset.id];
       if (data) {
+        assertAssetHash(asset, data);
         files[`assets/${asset.id}`] = data;
       }
     }
@@ -152,6 +160,7 @@ export class ComponentLibrary {
     for (const asset of parsed.assets) {
       const file = files[`assets/${asset.id}`];
       if (file) {
+        assertAssetHash(asset, file);
         assetData[asset.id] = file;
       }
     }

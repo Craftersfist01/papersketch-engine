@@ -24,6 +24,7 @@ and device-specific adapters.
 - Canvas and SVG drawing layers with rotated brush marks, hardness-aware shape rendering, and eraser masks.
 - Layer-state transitions with easing and bounded multi-pointer sessions for draw, pan, and select interactions.
 - Framework-neutral editor previews with component selection, layer trees, property panels, and undoable layer edits.
+- Asset fingerprints, cache invalidation, metadata-aware project manifests, and a typed project command bus.
 - Editor selection, hit testing, property editing, and undo/redo.
 - Validated component ZIP bundles with optional embedded assets.
 - Typed Game SDK events and state.
@@ -37,10 +38,10 @@ and device-specific adapters.
 
 | Package | Responsibility |
 | --- | --- |
-| `@papersketch/project-schema` | Versioned project contracts, validation, and migration |
+| `@papersketch/project-schema` | Versioned project contracts, metadata validation, and migration |
 | `@papersketch/engine-core` | Runtime-neutral scenes, components, and renderer ports |
 | `@papersketch/runtime` | Project loading, lifecycle, scene activation, and ticks |
-| `@papersketch/assets` | Cached and deduplicated asset loading |
+| `@papersketch/assets` | Validated, cached, fingerprinted, and deduplicated asset loading |
 | `@papersketch/renderer-canvas` | Canvas 2D layers, brush marks, erasing, and clipping |
 | `@papersketch/renderer-svg` | SVG layers, brush marks, eraser masks, asset references, and clipping |
 | `@papersketch/input` | Device-independent pointer normalization and multi-pointer sessions |
@@ -48,10 +49,10 @@ and device-specific adapters.
 | `@papersketch/animation` | Renderer-neutral animation scheduling and layer-state transitions |
 | `@papersketch/editor` | Editing state, component/layer selection, hit testing, and undo/redo |
 | `@papersketch/editor-ui` | Framework-neutral preview, layer-tree, and property-panel models |
-| `@papersketch/component-library` | Validated component bundle import/export |
+| `@papersketch/component-library` | Validated, fingerprint-checked component bundle import/export |
 | `@papersketch/networking` | Versioned JSON envelopes and transport contract |
 | `@papersketch/ipad-bridge` | PC-to-iPad preview and normalized pointer messages |
-| `@papersketch/game-sdk` | Typed event bus and mutable game state |
+| `@papersketch/game-sdk` | Typed event bus, mutable game state, and project command bus |
 | `@papersketch/websocket-transport` | Browser-compatible WebSocket adapter and connection descriptors |
 | `@papersketch/websocket-host` | Node-only token-protected LAN WebSocket host |
 | `@papersketch/connection-ui` | QR, connect-flow, camera-scan, and preview UI adapters |

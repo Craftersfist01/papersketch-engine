@@ -11,7 +11,10 @@
     "strict": true,
     "target": "ES2022"
   },
-  "references": [{ "path": "../project-schema" }],
+  "references": [
+    { "path": "../assets" },
+    { "path": "../project-schema" }
+  ],
   "include": ["src"]
 }
 

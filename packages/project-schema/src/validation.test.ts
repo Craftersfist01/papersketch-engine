@@ -105,4 +105,21 @@ describe("project schema", () => {
     expect(result.errors).toContain("components[0].bounds.width must not be negative");
     expect(result.errors).toContain('components[0].layers[1].id duplicates "base"');
   });
+
+  it("preserves valid metadata and rejects duplicate tags", () => {
+    const withMetadata = {
+      ...validProject,
+      metadata: {
+        description: "A demo",
+        author: "PaperSketch",
+        engineVersion: "0.1.0",
+        tags: ["demo", "sample"]
+      }
+    };
+    expect(parseProjectManifest(withMetadata).metadata?.tags).toEqual(["demo", "sample"]);
+    expect(() => parseProjectManifest({
+      ...validProject,
+      metadata: { tags: ["demo", "demo"] }
+    })).toThrow('metadata.tags[1] duplicates "demo"');
+  });
 });
