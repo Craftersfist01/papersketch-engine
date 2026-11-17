@@ -28,4 +28,15 @@ describe("brush generation", () => {
     expect(marks).toHaveLength(6);
     expect(marks.every((mark) => mark.size > 0 && mark.alpha >= 0 && mark.alpha <= 1)).toBe(true);
   });
+
+  it("rejects invalid brush parameters instead of producing unbounded work", () => {
+    expect(() => generateBrushMarks({
+      ...stroke,
+      brush: { ...stroke.brush, density: Number.POSITIVE_INFINITY }
+    })).toThrow("Brush density must be greater than zero");
+    expect(() => generateBrushMarks({
+      ...stroke,
+      brush: { ...stroke.brush, size: 0 }
+    })).toThrow("Brush size must be greater than zero");
+  });
 });

@@ -56,5 +56,11 @@ describe("pointer input", () => {
       clientY: 0,
       pressure: 2
     })).toThrow("Pointer pressure must be between 0 and 1");
+    expect(() => normalizePointerSample({
+      pointerId: 4,
+      pointerType: "pen",
+      clientX: Number.NaN,
+      clientY: 0
+    })).toThrow("Pointer coordinates must be finite numbers");
   });
 });

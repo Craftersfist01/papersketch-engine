@@ -22,10 +22,20 @@ function isLegacyProjectManifest(input: unknown): input is LegacyProjectManifest
 
 export function migrateProjectManifest(input: unknown): ProjectManifest {
   if (isLegacyProjectManifest(input)) {
+    const componentIds = new Set(
+      input.scenes.flatMap((scene) => scene.rootComponentIds)
+    );
     return parseProjectManifest({
       ...input,
       schemaVersion: PROJECT_SCHEMA_VERSION,
-      components: [],
+      components: [...componentIds].map((id) => ({
+        id,
+        name: id,
+        functionKey: id,
+        bounds: { x: 0, y: 0, width: 0, height: 0, rotation: 0 },
+        layers: [],
+        zones: []
+      })),
       assets: []
     });
   }

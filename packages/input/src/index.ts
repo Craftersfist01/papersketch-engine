@@ -47,9 +47,28 @@ function normalizeDevice(pointerType: string): PointerDevice {
 }
 
 export function normalizePointerSample(event: PointerEventLike): PointerSample {
+  if (!Number.isInteger(event.pointerId) || event.pointerId < 0) {
+    throw new RangeError("Pointer id must be a non-negative integer");
+  }
+  if (!Number.isFinite(event.clientX) || !Number.isFinite(event.clientY)) {
+    throw new RangeError("Pointer coordinates must be finite numbers");
+  }
   const pressure = event.pressure ?? 0;
   if (!Number.isFinite(pressure) || pressure < 0 || pressure > 1) {
     throw new RangeError("Pointer pressure must be between 0 and 1");
+  }
+  const tiltX = event.tiltX ?? 0;
+  const tiltY = event.tiltY ?? 0;
+  if (!Number.isFinite(tiltX) || !Number.isFinite(tiltY)) {
+    throw new RangeError("Pointer tilt must be finite numbers");
+  }
+  const buttons = event.buttons ?? 0;
+  if (!Number.isInteger(buttons) || buttons < 0) {
+    throw new RangeError("Pointer buttons must be a non-negative integer");
+  }
+  const timeMs = event.timeStamp ?? 0;
+  if (!Number.isFinite(timeMs) || timeMs < 0) {
+    throw new RangeError("Pointer timestamp must be a non-negative finite number");
   }
 
   return {
@@ -58,10 +77,10 @@ export function normalizePointerSample(event: PointerEventLike): PointerSample {
     x: event.clientX,
     y: event.clientY,
     pressure,
-    tiltX: event.tiltX ?? 0,
-    tiltY: event.tiltY ?? 0,
-    buttons: event.buttons ?? 0,
-    timeMs: event.timeStamp ?? 0
+    tiltX,
+    tiltY,
+    buttons,
+    timeMs
   };
 }
 
