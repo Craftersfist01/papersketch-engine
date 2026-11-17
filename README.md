@@ -16,6 +16,7 @@ Phase 2 adds a versioned project schema for components, layers, zones, and asset
 including reference validation and migration from schema version 1. Phase 3 adds
 scene loading, component instances, runtime lifecycle, and deterministic render ticks.
 Phase 4 adds cached asset loading plus Canvas and SVG renderer packages.
+Phase 5 adds device-normalized pointer samples and deterministic brush mark generation.
 
 ## Commands
 
