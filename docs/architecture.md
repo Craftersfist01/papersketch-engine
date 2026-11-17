@@ -32,13 +32,16 @@ ease-in, ease-out, and ease-in-out interpolation.
 Sessions enforce monotonic timestamps and a finite sample limit so a lost pointer
 cannot create unbounded memory growth.
 
-`editor` owns document editing and history but has no dependency on Runtime or
-browser UI frameworks. Editor changes are validated through the project schema before
-they become the current immutable project snapshot.
+`editor` owns document editing, component/layer selection, and history but has no
+dependency on Runtime or browser UI frameworks. Component and layer changes are
+validated through the project schema before they become the current immutable
+project snapshot.
 
 `component-library` packages validated components and optional asset bytes in a
 versioned ZIP format. `editor-ui` exposes presentation models rather than DOM
-elements, keeping the editor core portable across web and desktop shells.
+elements, keeping the editor core portable across web and desktop shells. Its
+preview model exposes scene bounds and selection state, while its layer tree and
+property models can be bound to any UI toolkit.
 
 `networking` defines a transport-neutral JSON envelope. `ipad-bridge` keeps the
 preview full-screen on the iPad, mirrors committed and active strokes plus the

@@ -20,7 +20,10 @@ const project = {
       name: "Front",
       functionKey: "front",
       bounds: { x: 20, y: 20, width: 40, height: 40, rotation: 0 },
-      layers: [],
+      layers: [
+        { id: "background", name: "Background", order: 0, visible: true, opacity: 1 },
+        { id: "overlay", name: "Overlay", order: 1, visible: true, opacity: 0.5 }
+      ],
       zones: []
     }
   ],
@@ -58,5 +61,27 @@ describe("EditorSession", () => {
       .toThrow("must not be negative");
     expect(() => editor.selectAt("menu", Number.NaN, 0))
       .toThrow("finite numbers");
+  });
+
+  it("selects and updates layers with undo/redo support", () => {
+    const editor = new EditorSession(project);
+
+    editor.selectLayers("front", ["overlay"]);
+    expect(editor.getState().selectedLayerIds).toEqual(["overlay"]);
+    editor.updateLayer("front", "overlay", { opacity: 0.25, visible: false });
+    expect(editor.getState().project.components[1]?.layers[1]?.opacity).toBe(0.25);
+    expect(editor.getState().project.components[1]?.layers[1]?.visible).toBe(false);
+    expect(editor.undo()).toBe(true);
+    expect(editor.getState().project.components[1]?.layers[1]?.opacity).toBe(0.5);
+    expect(editor.redo()).toBe(true);
+    expect(editor.getState().project.components[1]?.layers[1]?.visible).toBe(false);
+  });
+
+  it("rejects unknown layer selections and updates", () => {
+    const editor = new EditorSession(project);
+
+    expect(() => editor.selectLayers("front", ["missing"])).toThrow("unknown layer");
+    expect(() => editor.updateLayer("front", "missing", { visible: false }))
+      .toThrow('Unknown layer "missing"');
   });
 });

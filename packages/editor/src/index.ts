@@ -11,9 +11,18 @@ export interface ComponentPatch {
   readonly bounds?: Partial<Bounds>;
 }
 
+export interface LayerPatch {
+  readonly name?: string;
+  readonly order?: number;
+  readonly visible?: boolean;
+  readonly opacity?: number;
+  readonly assetId?: string;
+}
+
 export interface EditorState {
   readonly project: ProjectManifest;
   readonly selectedComponentIds: readonly string[];
+  readonly selectedLayerIds: readonly string[];
   readonly canUndo: boolean;
   readonly canRedo: boolean;
 }
@@ -36,6 +45,37 @@ function replaceComponent(
     throw new RangeError(`Unknown component "${componentId}"`);
   }
 
+  return parseProjectManifest({ ...project, components });
+}
+
+function replaceLayer(
+  project: ProjectManifest,
+  componentId: string,
+  layerId: string,
+  update: (layer: ComponentDefinition["layers"][number]) => ComponentDefinition["layers"][number]
+): ProjectManifest {
+  let foundComponent = false;
+  let foundLayer = false;
+  const components = project.components.map((component) => {
+    if (component.id !== componentId) {
+      return component;
+    }
+    foundComponent = true;
+    const layers = component.layers.map((layer) => {
+      if (layer.id !== layerId) {
+        return layer;
+      }
+      foundLayer = true;
+      return update(layer);
+    });
+    return { ...component, layers };
+  });
+  if (!foundComponent) {
+    throw new RangeError(`Unknown component "${componentId}"`);
+  }
+  if (!foundLayer) {
+    throw new RangeError(`Unknown layer "${layerId}"`);
+  }
   return parseProjectManifest({ ...project, components });
 }
 
@@ -83,6 +123,7 @@ export function hitTestComponent(
 export class EditorSession {
   private project: ProjectManifest;
   private selectedComponentIds: string[] = [];
+  private selectedLayerIds: string[] = [];
   private readonly undoStack: ProjectManifest[] = [];
   private readonly redoStack: ProjectManifest[] = [];
 
@@ -94,6 +135,7 @@ export class EditorSession {
     return {
       project: this.project,
       selectedComponentIds: [...this.selectedComponentIds],
+      selectedLayerIds: [...this.selectedLayerIds],
       canUndo: this.undoStack.length > 0,
       canRedo: this.redoStack.length > 0
     };
@@ -114,6 +156,20 @@ export class EditorSession {
     return componentId;
   }
 
+  public selectLayers(componentId: string, layerIds: readonly string[]): void {
+    const component = this.project.components.find((candidate) => candidate.id === componentId);
+    if (!component) {
+      throw new RangeError(`Unknown component "${componentId}"`);
+    }
+    const knownIds = new Set(component.layers.map((layer) => layer.id));
+    const uniqueIds = [...new Set(layerIds)];
+    if (uniqueIds.some((id) => !knownIds.has(id))) {
+      throw new RangeError("Layer selection contains an unknown layer");
+    }
+    this.selectedLayerIds = uniqueIds;
+    this.selectedComponentIds = uniqueIds.length > 0 ? [componentId] : this.selectedComponentIds;
+  }
+
   public updateComponent(componentId: string, patch: ComponentPatch): void {
     const previous = this.project;
     const next = replaceComponent(previous, componentId, (component) => ({
@@ -123,6 +179,21 @@ export class EditorSession {
       bounds: patch.bounds ? mergeBounds(component.bounds, patch.bounds) : component.bounds
     }));
 
+    this.project = next;
+    this.undoStack.push(previous);
+    this.redoStack.length = 0;
+  }
+
+  public updateLayer(componentId: string, layerId: string, patch: LayerPatch): void {
+    const previous = this.project;
+    const next = replaceLayer(previous, componentId, layerId, (layer) => ({
+      ...layer,
+      name: patch.name ?? layer.name,
+      order: patch.order ?? layer.order,
+      visible: patch.visible ?? layer.visible,
+      opacity: patch.opacity ?? layer.opacity,
+      ...(patch.assetId === undefined ? {} : { assetId: patch.assetId })
+    }));
     this.project = next;
     this.undoStack.push(previous);
     this.redoStack.length = 0;
@@ -138,6 +209,9 @@ export class EditorSession {
     this.selectedComponentIds = this.selectedComponentIds.filter((id) =>
       this.project.components.some((component) => component.id === id)
     );
+    this.selectedLayerIds = this.selectedLayerIds.filter((id) =>
+      this.project.components.some((component) => component.layers.some((layer) => layer.id === id))
+    );
     return true;
   }
 
@@ -148,6 +222,9 @@ export class EditorSession {
     }
     this.undoStack.push(this.project);
     this.project = next;
+    this.selectedLayerIds = this.selectedLayerIds.filter((id) =>
+      this.project.components.some((component) => component.layers.some((layer) => layer.id === id))
+    );
     return true;
   }
 }
