@@ -22,6 +22,7 @@ and device-specific adapters.
 - Cached asset loading plus Canvas and SVG renderers.
 - Normalized pointer input and deterministic seeded brush generation with pencil, charcoal, fineliner, and eraser profiles.
 - Canvas and SVG drawing layers with rotated brush marks, hardness-aware shape rendering, and eraser masks.
+- Layer-state transitions with easing and bounded multi-pointer sessions for draw, pan, and select interactions.
 - Editor selection, hit testing, property editing, and undo/redo.
 - Validated component ZIP bundles with optional embedded assets.
 - Typed Game SDK events and state.
@@ -41,9 +42,9 @@ and device-specific adapters.
 | `@papersketch/assets` | Cached and deduplicated asset loading |
 | `@papersketch/renderer-canvas` | Canvas 2D layers, brush marks, erasing, and clipping |
 | `@papersketch/renderer-svg` | SVG layers, brush marks, eraser masks, asset references, and clipping |
-| `@papersketch/input` | Device-independent pointer normalization |
+| `@papersketch/input` | Device-independent pointer normalization and multi-pointer sessions |
 | `@papersketch/drawing` | Serializable strokes and deterministic pressure-/tilt-aware brush marks |
-| `@papersketch/animation` | Renderer-neutral animation scheduling |
+| `@papersketch/animation` | Renderer-neutral animation scheduling and layer-state transitions |
 | `@papersketch/editor` | Editing state, hit testing, and undo/redo |
 | `@papersketch/editor-ui` | Framework-neutral property-panel models |
 | `@papersketch/component-library` | Validated component bundle import/export |

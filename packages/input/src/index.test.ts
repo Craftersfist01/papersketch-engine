@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   DEFAULT_INPUT_POLICY,
   normalizePointerSample,
+  PointerSessionManager,
   resolvePointerAction
 } from "./index.js";
 
@@ -62,5 +63,51 @@ describe("pointer input", () => {
       clientX: Number.NaN,
       clientY: 0
     })).toThrow("Pointer coordinates must be finite numbers");
+  });
+
+  it("tracks independent pointer sessions through completion", () => {
+    const manager = new PointerSessionManager();
+    const start = normalizePointerSample({
+      pointerId: 7,
+      pointerType: "pen",
+      clientX: 10,
+      clientY: 20,
+      timeStamp: 0
+    });
+    const move = normalizePointerSample({
+      pointerId: 7,
+      pointerType: "pen",
+      clientX: 12,
+      clientY: 22,
+      timeStamp: 10
+    });
+    const end = normalizePointerSample({
+      pointerId: 7,
+      pointerType: "pen",
+      clientX: 14,
+      clientY: 24,
+      timeStamp: 20
+    });
+
+    expect(manager.begin(start).action).toBe("draw");
+    expect(manager.update(move).samples).toHaveLength(2);
+    expect(manager.end(end).phase).toBe("end");
+    expect(manager.get(7)).toBeUndefined();
+  });
+
+  it("supports cancellation and rejects duplicate or out-of-order samples", () => {
+    const manager = new PointerSessionManager();
+    const sample = normalizePointerSample({
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 0,
+      clientY: 0,
+      timeStamp: 10
+    });
+    manager.begin(sample);
+    expect(() => manager.begin(sample)).toThrow("already has an active session");
+    expect(() => manager.update({ ...sample, timeMs: 5 })).toThrow("must not move backwards");
+    expect(manager.cancelAll()[0]?.phase).toBe("cancel");
+    expect(manager.active()).toHaveLength(0);
   });
 });

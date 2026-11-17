@@ -25,6 +25,18 @@ export interface PointerSample {
   readonly timeMs: number;
 }
 
+export type PointerSessionPhase = "start" | "move" | "end" | "cancel";
+
+export interface PointerSession {
+  readonly pointerId: number;
+  readonly device: PointerDevice;
+  readonly action: PointerAction;
+  readonly phase: PointerSessionPhase;
+  readonly startedAt: number;
+  readonly last: PointerSample;
+  readonly samples: readonly PointerSample[];
+}
+
 export interface InputPolicy {
   readonly pen: PointerAction;
   readonly touch: PointerAction;
@@ -89,4 +101,92 @@ export function resolvePointerAction(
   policy: InputPolicy = DEFAULT_INPUT_POLICY
 ): PointerAction {
   return policy[sample.device];
+}
+
+export class PointerSessionManager {
+  private readonly sessions = new Map<number, PointerSession>();
+
+  public constructor(
+    private readonly policy: InputPolicy = DEFAULT_INPUT_POLICY,
+    private readonly maxSamples = 4096
+  ) {
+    if (!Number.isInteger(maxSamples) || maxSamples < 2) {
+      throw new RangeError("Pointer session sample limit must be at least 2");
+    }
+  }
+
+  public begin(sample: PointerSample): PointerSession {
+    if (this.sessions.has(sample.pointerId)) {
+      throw new RangeError(`Pointer ${sample.pointerId} already has an active session`);
+    }
+    const session: PointerSession = {
+      pointerId: sample.pointerId,
+      device: sample.device,
+      action: resolvePointerAction(sample, this.policy),
+      phase: "start",
+      startedAt: sample.timeMs,
+      last: sample,
+      samples: [sample]
+    };
+    this.sessions.set(sample.pointerId, session);
+    return session;
+  }
+
+  public update(sample: PointerSample): PointerSession {
+    const current = this.getActive(sample.pointerId);
+    if (sample.timeMs < current.last.timeMs) {
+      throw new RangeError("Pointer session timestamps must not move backwards");
+    }
+    if (current.samples.length >= this.maxSamples) {
+      throw new RangeError("Pointer session sample limit exceeded");
+    }
+    const session: PointerSession = {
+      ...current,
+      phase: "move",
+      last: sample,
+      samples: [...current.samples, sample]
+    };
+    this.sessions.set(sample.pointerId, session);
+    return session;
+  }
+
+  public end(sample: PointerSample, cancelled = false): PointerSession {
+    const current = this.getActive(sample.pointerId);
+    if (sample.timeMs < current.last.timeMs) {
+      throw new RangeError("Pointer session timestamps must not move backwards");
+    }
+    const session: PointerSession = {
+      ...current,
+      phase: cancelled ? "cancel" : "end",
+      last: sample,
+      samples: [...current.samples, sample]
+    };
+    this.sessions.delete(sample.pointerId);
+    return session;
+  }
+
+  public get(pointerId: number): PointerSession | undefined {
+    return this.sessions.get(pointerId);
+  }
+
+  public active(): readonly PointerSession[] {
+    return [...this.sessions.values()];
+  }
+
+  public cancelAll(): readonly PointerSession[] {
+    const cancelled = [...this.sessions.values()].map((session) => ({
+      ...session,
+      phase: "cancel" as const
+    }));
+    this.sessions.clear();
+    return cancelled;
+  }
+
+  private getActive(pointerId: number): PointerSession {
+    const session = this.sessions.get(pointerId);
+    if (!session) {
+      throw new RangeError(`Pointer ${pointerId} has no active session`);
+    }
+    return session;
+  }
 }
