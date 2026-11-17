@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "lib": ["ESNext"]
+  },
+  "files": [],
+  "references": [
+    { "path": "./packages/project-schema" },
+    { "path": "./packages/engine-core" },
+    { "path": "./packages/runtime" }
+  ]
+}
+

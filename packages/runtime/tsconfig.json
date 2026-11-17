@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "ES2022"
+  },
+  "references": [
+    { "path": "../project-schema" },
+    { "path": "../engine-core" }
+  ],
+  "include": ["src"]
+}
+
