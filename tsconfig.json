@@ -18,6 +18,7 @@
     { "path": "./packages/component-library" },
     { "path": "./packages/editor-ui" },
     { "path": "./packages/networking" },
+    { "path": "./packages/websocket-transport" },
     { "path": "./packages/ipad-bridge" },
     { "path": "./packages/game-sdk" }
   ]
