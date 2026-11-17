@@ -33,7 +33,7 @@
 
 ### Validation
 
-- 17 test files
-- 41 passing tests
+- 18 test files
+- 50 passing tests
 - TypeScript project-reference typecheck passed
 - Production build passed
