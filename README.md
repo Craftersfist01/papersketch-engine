@@ -21,6 +21,7 @@ and device-specific adapters.
   renderer-neutral `RenderFrame` contracts.
 - Cached asset loading plus Canvas and SVG renderers.
 - Normalized pointer input and deterministic seeded brush generation with pencil, charcoal, fineliner, and eraser profiles.
+- Canvas and SVG drawing layers with rotated brush marks, hardness-aware shape rendering, and eraser masks.
 - Editor selection, hit testing, property editing, and undo/redo.
 - Validated component ZIP bundles with optional embedded assets.
 - Typed Game SDK events and state.
@@ -38,8 +39,8 @@ and device-specific adapters.
 | `@papersketch/engine-core` | Runtime-neutral scenes, components, and renderer ports |
 | `@papersketch/runtime` | Project loading, lifecycle, scene activation, and ticks |
 | `@papersketch/assets` | Cached and deduplicated asset loading |
-| `@papersketch/renderer-canvas` | Canvas 2D rendering and clipping |
-| `@papersketch/renderer-svg` | SVG rendering, asset references, and clipping |
+| `@papersketch/renderer-canvas` | Canvas 2D layers, brush marks, erasing, and clipping |
+| `@papersketch/renderer-svg` | SVG layers, brush marks, eraser masks, asset references, and clipping |
 | `@papersketch/input` | Device-independent pointer normalization |
 | `@papersketch/drawing` | Serializable strokes and deterministic pressure-/tilt-aware brush marks |
 | `@papersketch/animation` | Renderer-neutral animation scheduling |

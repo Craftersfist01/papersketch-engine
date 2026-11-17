@@ -6,6 +6,7 @@
   "exports": "./dist/index.js",
   "dependencies": {
     "@papersketch/assets": "0.1.0",
+    "@papersketch/drawing": "0.1.0",
     "@papersketch/engine-core": "0.1.0"
   }
 }

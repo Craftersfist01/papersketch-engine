@@ -6,6 +6,7 @@
   "files": [],
   "references": [
     { "path": "./packages/project-schema" },
+    { "path": "./packages/drawing" },
     { "path": "./packages/engine-core" },
     { "path": "./packages/runtime" },
     { "path": "./packages/assets" },

@@ -22,6 +22,7 @@
 - Phase 16 brush profiles for pencil, soft pencil, hard pencil, charcoal, fineliner, and eraser marks.
 - Deterministic pressure, tilt, velocity, grain, hardness, and eraser semantics.
 - Brush density and stroke timestamp safety limits.
+- Renderer drawing layers for Canvas and SVG, including rotated marks and eraser handling.
 
 ### Changed
 

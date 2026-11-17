@@ -93,4 +93,55 @@ describe("SvgRenderer", () => {
       }]
     })).toThrow("Unsafe SVG asset source");
   });
+
+  it("renders brush marks and masks eraser marks in the drawing layer", () => {
+    let markup = "";
+    const renderer = new SvgRenderer(
+      { setMarkup: (value) => { markup = value; } },
+      { width: 100, height: 100 }
+    );
+
+    renderer.render({
+      projectId: "demo",
+      deltaMs: 0,
+      elapsedMs: 0,
+      components: [],
+      strokes: [{
+        id: "pencil",
+        seed: 1,
+        brush: { kind: "pencil", size: 4, opacity: 1, density: 1, color: "#123456" },
+        points: [{ x: 10, y: 20, pressure: 1, tiltX: 10, tiltY: 0, timeMs: 0 }]
+      }, {
+        id: "eraser",
+        seed: 2,
+        brush: { kind: "eraser", size: 6, opacity: 0, density: 1 },
+        points: [{ x: 15, y: 20, pressure: 1, tiltX: 0, tiltY: 0, timeMs: 0 }]
+      }]
+    });
+
+    expect(markup).toContain('data-layer="drawing" mask="url(#drawing-erase-mask)"');
+    expect(markup).toContain('data-stroke-id="pencil"');
+    expect(markup).toContain('<mask id="drawing-erase-mask"');
+    expect(markup).toContain('fill="#123456"');
+  });
+
+  it("rejects unsafe drawing colors", () => {
+    const renderer = new SvgRenderer(
+      { setMarkup: () => undefined },
+      { width: 100, height: 100 }
+    );
+
+    expect(() => renderer.render({
+      projectId: "demo",
+      deltaMs: 0,
+      elapsedMs: 0,
+      components: [],
+      strokes: [{
+        id: "unsafe",
+        seed: 1,
+        brush: { kind: "pencil", size: 4, opacity: 1, density: 1, color: "url(javascript:alert(1))" },
+        points: [{ x: 10, y: 20, pressure: 1, tiltX: 0, tiltY: 0, timeMs: 0 }]
+      }]
+    })).toThrow("Unsafe drawing color");
+  });
 });

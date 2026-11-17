@@ -5,6 +5,7 @@
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {
+    "@papersketch/drawing": "0.1.0",
     "@papersketch/project-schema": "0.1.0"
   }
 }

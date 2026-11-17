@@ -11,7 +11,10 @@
     "skipLibCheck": true,
     "target": "ES2022"
   },
-  "references": [{ "path": "../project-schema" }],
+  "references": [
+    { "path": "../drawing" },
+    { "path": "../project-schema" }
+  ],
   "include": ["src"]
 }
 
