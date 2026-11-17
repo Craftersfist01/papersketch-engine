@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/animation",
   "version": "0.1.0",
+  "description": "Deterministic renderer-neutral animation scheduling.",
   "type": "module",
   "exports": "./dist/index.js"
 }

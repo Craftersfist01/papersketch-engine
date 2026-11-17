@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/connection-ui",
   "version": "0.1.0",
+  "description": "QR, browser connection, camera scan, and iPad preview UI adapters.",
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {

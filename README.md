@@ -1,49 +1,106 @@
 # PaperSketch Engine
 
-PaperSketch Engine is a TypeScript foundation for hand-drawn games, interfaces, and interactive applications.
+PaperSketch Engine is a modular TypeScript foundation for hand-drawn games,
+interactive interfaces, and remote tablet drawing workflows. It separates
+serializable project data, runtime execution, rendering, editing, networking,
+and device-specific adapters.
 
-## Phase 1
+## What is included
 
-This phase establishes:
+- Versioned project schema with validation, reference checks, and migration.
+- Runtime scenes, component instances, deterministic ticks, animation, and
+  renderer-neutral `RenderFrame` contracts.
+- Cached asset loading plus Canvas and SVG renderers.
+- Normalized pointer input and deterministic seeded brush generation.
+- Editor selection, hit testing, property editing, and undo/redo.
+- Validated component ZIP bundles with optional embedded assets.
+- Typed Game SDK events and state.
+- iPad full-screen preview with committed and active stroke synchronization.
+- Browser-compatible WebSocket transport and token-protected Node LAN host.
+- QR-ready connection descriptors and browser connection UI models.
+- QR rendering, camera-scanner adapter, and live preview canvas binding.
+- End-to-end reference game and a reproducible release verification command.
 
-- a workspace-based package layout;
-- versioned project contracts;
-- a renderer-agnostic engine core boundary;
-- a runtime package that does not depend on editor code;
-- repeatable type-checking, builds, and tests.
+## Package map
 
-Phase 2 adds a versioned project schema for components, layers, zones, and assets,
-including reference validation and migration from schema version 1. Phase 3 adds
-scene loading, component instances, runtime lifecycle, and deterministic render ticks.
-Phase 4 adds cached asset loading plus Canvas and SVG renderer packages.
-Phase 5 adds device-normalized pointer samples and deterministic brush mark generation.
-Phase 6 adds deterministic animation scheduling and rectangle/circle/path clipping
-support for the renderers.
-Phase 7 adds framework-neutral editor selection, property editing, hit testing,
-and undo/redo.
-Phase 8 adds validated component bundles with ZIP import/export and a UI-neutral
-property-panel model.
-Phase 9 adds typed game events/state plus a transport-neutral iPad bridge with
-full-screen preview synchronization and PC-controlled drawing style.
-Phase 10 adds a browser-compatible WebSocket transport and QR-ready LAN
-connection descriptors for connecting the iPad bridge.
-Phase 11 adds a Node LAN WebSocket host with token-gated connections and
-descriptor-to-URL conversion.
-Phase 12 adds framework-neutral host/iPad connection UI models with QR payload,
-connect, connected, reset, and error states.
-Phase 13 adds browser DOM integration for QR rendering, camera scanning,
-connection status, and live iPad preview canvas rendering.
-Phase 14 adds an end-to-end reference game and a release verification command
-covering runtime, Game SDK, WebSocket-ready bridge state, and pointer input.
+| Package | Responsibility |
+| --- | --- |
+| `@papersketch/project-schema` | Versioned project contracts, validation, and migration |
+| `@papersketch/engine-core` | Runtime-neutral scenes, components, and renderer ports |
+| `@papersketch/runtime` | Project loading, lifecycle, scene activation, and ticks |
+| `@papersketch/assets` | Cached and deduplicated asset loading |
+| `@papersketch/renderer-canvas` | Canvas 2D rendering and clipping |
+| `@papersketch/renderer-svg` | SVG rendering, asset references, and clipping |
+| `@papersketch/input` | Device-independent pointer normalization |
+| `@papersketch/drawing` | Serializable strokes and deterministic brush marks |
+| `@papersketch/animation` | Renderer-neutral animation scheduling |
+| `@papersketch/editor` | Editing state, hit testing, and undo/redo |
+| `@papersketch/editor-ui` | Framework-neutral property-panel models |
+| `@papersketch/component-library` | Validated component bundle import/export |
+| `@papersketch/networking` | Versioned JSON envelopes and transport contract |
+| `@papersketch/ipad-bridge` | PC-to-iPad preview and normalized pointer messages |
+| `@papersketch/game-sdk` | Typed event bus and mutable game state |
+| `@papersketch/websocket-transport` | Browser WebSocket adapter and Node LAN host |
+| `@papersketch/connection-ui` | QR, connect-flow, camera-scan, and preview UI adapters |
+| `@papersketch/reference-game` | End-to-end integration sample |
 
-## Commands
+## Quick start
 
-```text
+Requirements: Node.js 20 or newer and npm.
+
+```bash
 npm install
+npm run release:check
+```
+
+The release check runs the complete typecheck, test suite, and production
+build. Individual commands are also available:
+
+```bash
 npm run typecheck
 npm test
 npm run build
 ```
 
-The editor and renderer implementations are intentionally deferred to later phases.
+## iPad connection flow
 
+1. The PC creates a tokenized `ConnectionDescriptor`.
+2. The LAN WebSocket host validates the token during the upgrade request.
+3. The host UI renders the `papersketch://connect?...` payload as a QR code.
+4. The iPad scanner parses the payload and opens the WebSocket connection.
+5. The host sends full-screen preview state, including PC-selected color,
+   tool, brush size, committed strokes, and the active stroke.
+6. The iPad sends only normalized pointer coordinates, pressure, and tilt.
+
+The transport and UI layers are adapter-based. A browser camera implementation,
+desktop shell, or framework can be supplied without changing the engine core.
+
+## Phase history
+
+All planned foundation and integration phases are complete:
+
+1. Monorepo foundation
+2. Project schema and migration
+3. Runtime and scenes
+4. Assets and renderers
+5. Input and deterministic drawing
+6. Animation and clipping
+7. Editor core
+8. Component library and editor UI models
+9. Game SDK and transport-neutral iPad bridge
+10. Browser WebSocket transport and QR-ready descriptors
+11. Tokenized Node LAN host
+12. Host/iPad connection-flow models
+13. Browser QR, scanner, and live preview adapters
+14. End-to-end reference game and release verification
+
+## Current release boundary
+
+The engine packages and integration sample are released as a library
+foundation. A production application still needs a chosen browser or desktop
+shell, camera permissions, deployment configuration, and a concrete visual
+editor application. Those concerns intentionally remain outside the core
+packages.
+
+See [docs/architecture.md](docs/architecture.md) for dependency boundaries
+and [CHANGELOG.md](CHANGELOG.md) for the visible release history.

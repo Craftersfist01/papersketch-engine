@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/ipad-bridge",
   "version": "0.1.0",
+  "description": "Full-screen iPad preview synchronization and normalized pointer input.",
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {

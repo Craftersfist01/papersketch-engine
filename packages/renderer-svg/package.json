@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/renderer-svg",
   "version": "0.1.0",
+  "description": "SVG renderer for PaperSketch runtime frames and zones.",
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {

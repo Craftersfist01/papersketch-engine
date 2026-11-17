@@ -43,7 +43,10 @@ connection status, and binding preview updates to a canvas.
 events, builds deterministic strokes, publishes the full-screen preview, and
 starts the runtime without coupling the runtime to editor UI.
 
-The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
+The visual editor and concrete application shell remain optional consumers of
+these packages. The current repository includes renderer implementations,
+networking, browser connection adapters, and a reference game, while keeping
+the runtime independent from editor and browser UI code.
 
 ## Initial decisions
 
@@ -63,4 +66,12 @@ project-schema <- engine-core <- runtime
 ```
 
 Editor packages may depend on the schema and runtime contracts, but the runtime must never depend on the editor.
+
+## Release and integration boundary
+
+The library release provides tested primitives and an end-to-end integration
+sample. Applications choose the browser or desktop shell, camera permission
+flow, WebSocket deployment, and visual editor composition. Browser-specific
+features are exposed through adapters so they do not leak into serializable
+project data or the core runtime.
 

@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/networking",
   "version": "0.1.0",
+  "description": "Versioned JSON envelopes and transport-neutral messaging.",
   "type": "module",
   "exports": "./dist/index.js"
 }

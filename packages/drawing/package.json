@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/drawing",
   "version": "0.1.0",
+  "description": "Serializable strokes and deterministic seeded brush generation.",
   "type": "module",
   "exports": "./dist/index.js"
 }

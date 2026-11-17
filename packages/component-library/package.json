@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/component-library",
   "version": "0.1.0",
+  "description": "Validated component bundles with ZIP import and export.",
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {

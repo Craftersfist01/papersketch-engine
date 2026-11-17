@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/reference-game",
   "version": "0.1.0",
+  "description": "End-to-end PaperSketch runtime, game, and iPad bridge example.",
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {

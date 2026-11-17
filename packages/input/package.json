@@ -1,6 +1,7 @@
 {
   "name": "@papersketch/input",
   "version": "0.1.0",
+  "description": "Device-independent pointer normalization.",
   "type": "module",
   "exports": "./dist/index.js"
 }
