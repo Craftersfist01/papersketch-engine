@@ -3,6 +3,7 @@ import { createConnectionDescriptor } from "@papersketch/websocket-transport";
 import {
   IpadConnectionFlow,
   createHostConnectionPanel,
+  renderPreviewState,
   setHostConnectionStatus
 } from "./index.js";
 
@@ -44,5 +45,47 @@ describe("connection UI models", () => {
       status: "error",
       error: "offline"
     });
+  });
+
+  it("renders committed and active strokes into the preview context", () => {
+    const calls: string[] = [];
+    const context = {
+      canvas: { width: 0, height: 0 },
+      clearRect: () => calls.push("clear"),
+      beginPath: () => calls.push("begin"),
+      moveTo: () => calls.push("move"),
+      lineTo: () => calls.push("line"),
+      stroke: () => calls.push("stroke"),
+      strokeStyle: "",
+      lineCap: "round" as const,
+      lineWidth: 0
+    };
+
+    renderPreviewState(context, {
+      layout: "full-screen-preview",
+      canvasWidth: 100,
+      canvasHeight: 100,
+      color: "#123456",
+      brushSize: 4,
+      tool: "pencil",
+      strokes: [{
+        id: "committed",
+        seed: 1,
+        brush: { kind: "pencil", size: 4, opacity: 1, density: 1 },
+        points: [
+          { x: 10, y: 10, pressure: 1, tiltX: 0, tiltY: 0, timeMs: 0 },
+          { x: 20, y: 20, pressure: 1, tiltX: 0, tiltY: 0, timeMs: 1 }
+        ]
+      }],
+      activeStroke: {
+        id: "active",
+        seed: 2,
+        brush: { kind: "pencil", size: 4, opacity: 1, density: 1 },
+        points: [{ x: 30, y: 30, pressure: 1, tiltX: 0, tiltY: 0, timeMs: 0 }]
+      }
+    });
+
+    expect(context.canvas).toEqual({ width: 100, height: 100 });
+    expect(calls).toEqual(["clear", "begin", "move", "line", "stroke", "begin", "move", "stroke"]);
   });
 });

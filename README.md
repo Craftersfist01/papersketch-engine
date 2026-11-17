@@ -31,6 +31,8 @@ Phase 11 adds a Node LAN WebSocket host with token-gated connections and
 descriptor-to-URL conversion.
 Phase 12 adds framework-neutral host/iPad connection UI models with QR payload,
 connect, connected, reset, and error states.
+Phase 13 adds browser DOM integration for QR rendering, camera scanning,
+connection status, and live iPad preview canvas rendering.
 
 ## Commands
 
