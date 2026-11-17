@@ -16,7 +16,10 @@
     { "path": "./packages/animation" },
     { "path": "./packages/editor" },
     { "path": "./packages/component-library" },
-    { "path": "./packages/editor-ui" }
+    { "path": "./packages/editor-ui" },
+    { "path": "./packages/networking" },
+    { "path": "./packages/ipad-bridge" },
+    { "path": "./packages/game-sdk" }
   ]
 }
 
