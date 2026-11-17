@@ -13,7 +13,8 @@ This phase establishes:
 - repeatable type-checking, builds, and tests.
 
 Phase 2 adds a versioned project schema for components, layers, zones, and assets,
-including reference validation and migration from schema version 1.
+including reference validation and migration from schema version 1. Phase 3 adds
+scene loading, component instances, runtime lifecycle, and deterministic render ticks.
 
 ## Commands
 
