@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc --build",
     "test": "vitest run",
-    "typecheck": "tsc --build --pretty false"
+    "typecheck": "tsc --build --pretty false",
+    "release:check": "npm run typecheck && npm test && npm run build"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
