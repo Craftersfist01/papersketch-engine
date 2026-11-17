@@ -37,6 +37,8 @@ specific WebSocket server implementation. Its optional Node host validates the
 descriptor token before exposing an accepted connection as a `MessageTransport`.
 `connection-ui` exposes framework-neutral models for rendering the host QR code
 and driving the iPad scan/connect state machine.
+It also provides optional browser DOM adapters for QR rendering, camera scanning,
+connection status, and binding preview updates to a canvas.
 
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 

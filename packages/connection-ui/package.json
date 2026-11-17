@@ -4,6 +4,11 @@
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {
-    "@papersketch/websocket-transport": "0.1.0"
+    "@papersketch/ipad-bridge": "0.1.0",
+    "@papersketch/websocket-transport": "0.1.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6"
   }
 }

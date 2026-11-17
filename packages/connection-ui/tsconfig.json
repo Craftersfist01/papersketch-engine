@@ -9,8 +9,12 @@
     "rootDir": "src",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"]
   },
-  "references": [{ "path": "../websocket-transport" }],
+  "references": [
+    { "path": "../websocket-transport" },
+    { "path": "../ipad-bridge" }
+  ],
   "include": ["src"]
 }

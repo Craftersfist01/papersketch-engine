@@ -62,6 +62,7 @@ export class IpadBridgeHost {
 
 export class IpadPreviewClient {
   private preview: IpadPreviewState | undefined;
+  private readonly previewListeners = new Set<(state: IpadPreviewState) => void>();
 
   public constructor(private readonly channel: JsonChannel) {
     this.channel.subscribe<IpadPreviewState>(IPAD_PREVIEW_MESSAGE, (state) => {
@@ -69,6 +70,9 @@ export class IpadPreviewClient {
         throw new TypeError("Unsupported iPad preview layout");
       }
       this.preview = state;
+      for (const listener of this.previewListeners) {
+        listener(state);
+      }
     });
   }
 
@@ -79,5 +83,10 @@ export class IpadPreviewClient {
   public sendPointer(event: IpadPointerEvent): void {
     validatePointerEvent(event);
     this.channel.send(IPAD_POINTER_MESSAGE, event);
+  }
+
+  public onPreview(listener: (state: IpadPreviewState) => void): () => void {
+    this.previewListeners.add(listener);
+    return () => this.previewListeners.delete(listener);
   }
 }
