@@ -31,7 +31,9 @@ elements, keeping the editor core portable across web and desktop shells.
 `networking` defines a transport-neutral JSON envelope. `ipad-bridge` keeps the
 preview full-screen on the iPad, mirrors committed and active strokes plus the
 PC-selected style, and sends only normalized pointer input back to the host.
-The host can later bind the transport to WebSocket without changing the protocol.
+`websocket-transport` binds that protocol to browser-compatible WebSocket objects
+and provides QR-ready connection descriptors without coupling the protocol to a
+specific WebSocket server implementation.
 
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
