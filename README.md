@@ -49,7 +49,8 @@ and device-specific adapters.
 | `@papersketch/networking` | Versioned JSON envelopes and transport contract |
 | `@papersketch/ipad-bridge` | PC-to-iPad preview and normalized pointer messages |
 | `@papersketch/game-sdk` | Typed event bus and mutable game state |
-| `@papersketch/websocket-transport` | Browser WebSocket adapter and Node LAN host |
+| `@papersketch/websocket-transport` | Browser-compatible WebSocket adapter and connection descriptors |
+| `@papersketch/websocket-host` | Node-only token-protected LAN WebSocket host |
 | `@papersketch/connection-ui` | QR, connect-flow, camera-scan, and preview UI adapters |
 | `@papersketch/reference-game` | End-to-end integration sample |
 
@@ -102,6 +103,7 @@ All planned foundation and integration phases are complete:
 12. Host/iPad connection-flow models
 13. Browser QR, scanner, and live preview adapters
 14. End-to-end reference game and release verification
+15. Browser/Node transport separation and security hardening
 
 ## Current release boundary
 

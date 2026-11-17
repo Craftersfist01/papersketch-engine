@@ -15,6 +15,16 @@
 - End-to-end reference game with synchronized active/final strokes.
 - `npm run release:check` for typecheck, tests, and build.
 
+## Unreleased
+
+### Changed
+
+- Separated the browser WebSocket transport from the Node-only LAN host.
+- Added payload size limits and optional structured network error handling.
+- Added token-strength and constant-time token checks for the LAN host.
+- Added ZIP path, archive-size, and SVG source safety validation.
+- Added iPad preview and pointer payload validation.
+
 ### Validation
 
 - 17 test files

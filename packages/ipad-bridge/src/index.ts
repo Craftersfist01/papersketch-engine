@@ -26,6 +26,9 @@ export interface IpadPointerEvent {
 }
 
 function validatePointerEvent(event: IpadPointerEvent): void {
+  if (!["start", "move", "end", "cancel"].includes(event.phase)) {
+    throw new TypeError("iPad pointer phase is unsupported");
+  }
   if (!Number.isInteger(event.pointerId) || event.pointerId < 0) {
     throw new RangeError("iPad pointer id must be a non-negative integer");
   }
@@ -40,14 +43,47 @@ function validatePointerEvent(event: IpadPointerEvent): void {
   if (event.pressure < 0 || event.pressure > 1) {
     throw new RangeError("iPad pointer pressure must be between 0 and 1");
   }
+  if (event.tiltX < -90 || event.tiltX > 90 || event.tiltY < -90 || event.tiltY > 90) {
+    throw new RangeError("iPad pointer tilt must be between -90 and 90 degrees");
+  }
+}
+
+function isValidPointerEvent(value: unknown): value is IpadPointerEvent {
+  try {
+    validatePointerEvent(value as IpadPointerEvent);
+    return typeof value === "object" && value !== null;
+  } catch {
+    return false;
+  }
+}
+
+function isValidPreviewState(value: unknown): value is IpadPreviewState {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const state = value as Partial<IpadPreviewState>;
+  return state.layout === "full-screen-preview"
+    && typeof state.canvasWidth === "number"
+    && Number.isFinite(state.canvasWidth)
+    && state.canvasWidth > 0
+    && typeof state.canvasHeight === "number"
+    && Number.isFinite(state.canvasHeight)
+    && state.canvasHeight > 0
+    && typeof state.color === "string"
+    && state.color.length > 0
+    && typeof state.brushSize === "number"
+    && Number.isFinite(state.brushSize)
+    && state.brushSize > 0
+    && typeof state.tool === "string"
+    && Array.isArray(state.strokes);
 }
 
 export class IpadBridgeHost {
   public constructor(private readonly channel: JsonChannel) {}
 
   public publishPreview(state: IpadPreviewState): void {
-    if (state.layout !== "full-screen-preview") {
-      throw new TypeError("iPad preview must use the full-screen-preview layout");
+    if (!isValidPreviewState(state)) {
+      throw new TypeError("Invalid iPad preview state");
     }
     this.channel.send(IPAD_PREVIEW_MESSAGE, state);
   }
@@ -56,7 +92,7 @@ export class IpadBridgeHost {
     return this.channel.subscribe<IpadPointerEvent>(IPAD_POINTER_MESSAGE, (event) => {
       validatePointerEvent(event);
       listener(event);
-    });
+    }, isValidPointerEvent);
   }
 }
 
@@ -66,14 +102,11 @@ export class IpadPreviewClient {
 
   public constructor(private readonly channel: JsonChannel) {
     this.channel.subscribe<IpadPreviewState>(IPAD_PREVIEW_MESSAGE, (state) => {
-      if (state.layout !== "full-screen-preview") {
-        throw new TypeError("Unsupported iPad preview layout");
-      }
       this.preview = state;
       for (const listener of this.previewListeners) {
         listener(state);
       }
-    });
+    }, isValidPreviewState);
   }
 
   public getPreview(): IpadPreviewState | undefined {

@@ -45,4 +45,18 @@ describe("ComponentLibrary", () => {
     expect(() => library.exportZip("missing")).toThrow("Unknown library component");
     expect(() => library.importZip(new Uint8Array([1, 2, 3]))).toThrow("ZIP is invalid");
   });
+
+  it("rejects unsafe asset paths", () => {
+    const library = new ComponentLibrary();
+    const unsafe = {
+      ...entry,
+      component: {
+        ...entry.component,
+        layers: [{ ...entry.component.layers[0], assetId: "../escape.svg" }]
+      },
+      assets: [{ ...entry.assets[0], id: "../escape.svg" }]
+    };
+
+    expect(() => library.add(unsafe)).toThrow("Unsafe component asset id");
+  });
 });

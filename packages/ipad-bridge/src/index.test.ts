@@ -64,4 +64,19 @@ describe("iPad bridge", () => {
       tiltY: 0
     })).toThrow("normalized between 0 and 1");
   });
+
+  it("rejects invalid preview dimensions before sending", () => {
+    const [hostTransport] = createLoopbackTransportPair();
+    const host = new IpadBridgeHost(new JsonChannel(hostTransport));
+
+    expect(() => host.publishPreview({
+      layout: "full-screen-preview",
+      canvasWidth: 0,
+      canvasHeight: 100,
+      color: "#222222",
+      brushSize: 4,
+      tool: "pencil",
+      strokes: []
+    })).toThrow("Invalid iPad preview state");
+  });
 });
