@@ -29,6 +29,8 @@ Phase 10 adds a browser-compatible WebSocket transport and QR-ready LAN
 connection descriptors for connecting the iPad bridge.
 Phase 11 adds a Node LAN WebSocket host with token-gated connections and
 descriptor-to-URL conversion.
+Phase 12 adds framework-neutral host/iPad connection UI models with QR payload,
+connect, connected, reset, and error states.
 
 ## Commands
 
