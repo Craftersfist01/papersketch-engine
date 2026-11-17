@@ -4,6 +4,10 @@
   "type": "module",
   "exports": "./dist/index.js",
   "dependencies": {
-    "@papersketch/networking": "0.1.0"
+    "@papersketch/networking": "0.1.0",
+    "ws": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.2"
   }
 }
