@@ -14,7 +14,9 @@
     { "path": "./packages/input" },
     { "path": "./packages/drawing" },
     { "path": "./packages/animation" },
-    { "path": "./packages/editor" }
+    { "path": "./packages/editor" },
+    { "path": "./packages/component-library" },
+    { "path": "./packages/editor-ui" }
   ]
 }
 
