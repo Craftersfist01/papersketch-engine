@@ -19,6 +19,8 @@ Phase 4 adds cached asset loading plus Canvas and SVG renderer packages.
 Phase 5 adds device-normalized pointer samples and deterministic brush mark generation.
 Phase 6 adds deterministic animation scheduling and rectangle/circle/path clipping
 support for the renderers.
+Phase 7 adds framework-neutral editor selection, property editing, hit testing,
+and undo/redo.
 
 ## Commands
 
