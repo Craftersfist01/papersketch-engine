@@ -1,9 +1,18 @@
 # PaperSketch Engine
 
+[![Release](https://img.shields.io/github/v/release/Craftersfist01/papersketch-engine?display_name=tag)](https://github.com/Craftersfist01/papersketch-engine/releases/latest)
+
 PaperSketch Engine is a modular TypeScript foundation for hand-drawn games,
 interactive interfaces, and remote tablet drawing workflows. It separates
 serializable project data, runtime execution, rendering, editing, networking,
 and device-specific adapters.
+
+**Current release:** [v0.1.0](https://github.com/Craftersfist01/papersketch-engine/releases/tag/v0.1.0)
+
+> **Status:** The engine foundation is complete. The repository currently ships
+> tested library packages, browser/LAN connection adapters, and an end-to-end
+> reference game. A production editor shell and deployment-specific camera
+> integration remain application-level work.
 
 ## What is included
 
