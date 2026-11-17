@@ -23,6 +23,7 @@ and device-specific adapters.
 - Normalized pointer input and deterministic seeded brush generation with pencil, charcoal, fineliner, and eraser profiles.
 - Canvas and SVG drawing layers with rotated brush marks, hardness-aware shape rendering, and eraser masks.
 - Layer-state transitions with easing and bounded multi-pointer sessions for draw, pan, and select interactions.
+- Framework-neutral editor previews with component selection, layer trees, property panels, and undoable layer edits.
 - Editor selection, hit testing, property editing, and undo/redo.
 - Validated component ZIP bundles with optional embedded assets.
 - Typed Game SDK events and state.
@@ -45,8 +46,8 @@ and device-specific adapters.
 | `@papersketch/input` | Device-independent pointer normalization and multi-pointer sessions |
 | `@papersketch/drawing` | Serializable strokes and deterministic pressure-/tilt-aware brush marks |
 | `@papersketch/animation` | Renderer-neutral animation scheduling and layer-state transitions |
-| `@papersketch/editor` | Editing state, hit testing, and undo/redo |
-| `@papersketch/editor-ui` | Framework-neutral property-panel models |
+| `@papersketch/editor` | Editing state, component/layer selection, hit testing, and undo/redo |
+| `@papersketch/editor-ui` | Framework-neutral preview, layer-tree, and property-panel models |
 | `@papersketch/component-library` | Validated component bundle import/export |
 | `@papersketch/networking` | Versioned JSON envelopes and transport contract |
 | `@papersketch/ipad-bridge` | PC-to-iPad preview and normalized pointer messages |
