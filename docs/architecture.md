@@ -11,7 +11,8 @@ It also validates asset and component references and provides migrations between
 
 `assets` provides cached, deduplicated loading through an injected source. The Canvas
 and SVG renderer packages consume the engine's `RenderFrame` contract and remain
-replaceable implementations.
+replaceable implementations. Asset identifiers are validated, loaded data can be
+fingerprinted, and stores support targeted invalidation and snapshots.
 
 `input` normalizes browser pointer data without importing browser globals. `drawing`
 stores serializable stroke data and uses explicit seeds for reproducible brush output.
@@ -38,10 +39,14 @@ validated through the project schema before they become the current immutable
 project snapshot.
 
 `component-library` packages validated components and optional asset bytes in a
-versioned ZIP format. `editor-ui` exposes presentation models rather than DOM
+versioned ZIP format and verifies optional asset fingerprints during import/export.
+`project-schema` accepts optional descriptive project metadata while preserving
+schema-version compatibility. `editor-ui` exposes presentation models rather than DOM
 elements, keeping the editor core portable across web and desktop shells. Its
 preview model exposes scene bounds and selection state, while its layer tree and
 property models can be bound to any UI toolkit.
+`game-sdk` also exposes a small typed project command bus for host/editor/game
+coordination without coupling the core to a transport.
 
 `networking` defines a transport-neutral JSON envelope. `ipad-bridge` keeps the
 preview full-screen on the iPad, mirrors committed and active strokes plus the

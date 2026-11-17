@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { createAssetFingerprint } from "@papersketch/assets";
 import { ComponentLibrary } from "./index.js";
 
 const entry = {
@@ -58,5 +59,19 @@ describe("ComponentLibrary", () => {
     };
 
     expect(() => library.add(unsafe)).toThrow("Unsafe component asset id");
+  });
+
+  it("validates optional asset fingerprints during export and import", () => {
+    const library = new ComponentLibrary();
+    const hashedEntry = {
+      ...entry,
+      assets: [{ ...entry.assets[0], hash: createAssetFingerprint(new Uint8Array([1, 2, 3])) }]
+    };
+    library.add(hashedEntry);
+
+    const zip = library.exportZip("button", { "button-art": new Uint8Array([1, 2, 3]) });
+    expect(library.importZip(zip).assetData["button-art"]).toBeDefined();
+    expect(() => library.exportZip("button", { "button-art": new Uint8Array([3, 2, 1]) }))
+      .toThrow("fingerprint does not match");
   });
 });

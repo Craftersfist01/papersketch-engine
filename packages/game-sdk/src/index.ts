@@ -1,5 +1,30 @@
 export type GameEventMap = Record<string, unknown>;
 
+export interface ProjectCommand {
+  readonly type: string;
+  readonly payload?: unknown;
+}
+
+export type ProjectCommandHandler = (command: ProjectCommand) => void;
+
+export class ProjectCommandBus {
+  private readonly handlers = new Set<ProjectCommandHandler>();
+
+  public on(handler: ProjectCommandHandler): () => void {
+    this.handlers.add(handler);
+    return () => this.handlers.delete(handler);
+  }
+
+  public dispatch(command: ProjectCommand): void {
+    if (!command.type || command.type.trim().length === 0) {
+      throw new TypeError("Project command type must be a non-empty string");
+    }
+    for (const handler of this.handlers) {
+      handler(command);
+    }
+  }
+}
+
 export class GameEventBus<Events extends GameEventMap> {
   private readonly listeners = new Map<keyof Events, Set<(payload: unknown) => void>>();
 

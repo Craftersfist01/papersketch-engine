@@ -226,6 +226,33 @@ export function validateProjectManifest(input: unknown): ValidationResult {
   }
   if (!isString(input.id)) errors.push("id must be a non-empty string");
   if (!isString(input.name)) errors.push("name must be a non-empty string");
+  if (input.metadata !== undefined) {
+    if (!isRecord(input.metadata)) {
+      errors.push("metadata must be an object");
+    } else {
+      for (const key of ["description", "author", "engineVersion"]) {
+        if (input.metadata[key] !== undefined && !isString(input.metadata[key])) {
+          errors.push(`metadata.${key} must be a non-empty string when provided`);
+        }
+      }
+      if (input.metadata.tags !== undefined) {
+        if (!Array.isArray(input.metadata.tags)) {
+          errors.push("metadata.tags must be an array");
+        } else {
+          const tags = new Set<string>();
+          input.metadata.tags.forEach((tag, index) => {
+            if (!isString(tag)) {
+              errors.push(`metadata.tags[${index}] must be a non-empty string`);
+            } else if (tags.has(tag)) {
+              errors.push(`metadata.tags[${index}] duplicates "${tag}"`);
+            } else {
+              tags.add(tag);
+            }
+          });
+        }
+      }
+    }
+  }
 
   const assets = Array.isArray(input.assets) ? input.assets : [];
   const components = Array.isArray(input.components) ? input.components : [];
