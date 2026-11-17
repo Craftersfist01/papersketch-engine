@@ -17,6 +17,12 @@
 
 ## Unreleased
 
+### Added
+
+- Phase 16 brush profiles for pencil, soft pencil, hard pencil, charcoal, fineliner, and eraser marks.
+- Deterministic pressure, tilt, velocity, grain, hardness, and eraser semantics.
+- Brush density and stroke timestamp safety limits.
+
 ### Changed
 
 - Separated the browser WebSocket transport from the Node-only LAN host.

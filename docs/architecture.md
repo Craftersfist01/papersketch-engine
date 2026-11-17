@@ -15,6 +15,8 @@ replaceable implementations.
 
 `input` normalizes browser pointer data without importing browser globals. `drawing`
 stores serializable stroke data and uses explicit seeds for reproducible brush output.
+Its brush profiles apply pressure, tilt, velocity, grain, hardness, and eraser
+semantics while keeping generated marks deterministic.
 
 `animation` provides a renderer-neutral scheduler. Clipping remains data-driven:
 SVG supports all schema zone shapes, while Canvas applies rectangle and circle zones
