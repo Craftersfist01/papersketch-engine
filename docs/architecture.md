@@ -3,6 +3,7 @@
 ## Boundaries
 
 `project-schema` contains serializable project contracts and must remain independent of browser APIs.
+It also validates asset and component references and provides migrations between schema versions.
 
 `engine-core` owns runtime-neutral engine contracts such as clocks, scenes, and rendering ports. It must not import editor code or concrete rendering libraries.
 

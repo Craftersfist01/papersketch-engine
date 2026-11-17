@@ -12,6 +12,9 @@ This phase establishes:
 - a runtime package that does not depend on editor code;
 - repeatable type-checking, builds, and tests.
 
+Phase 2 adds a versioned project schema for components, layers, zones, and assets,
+including reference validation and migration from schema version 1.
+
 ## Commands
 
 ```text
