@@ -9,6 +9,11 @@ export interface CanvasContextLike {
   save(): void;
   rotate(angle: number): void;
   translate(x: number, y: number): void;
+  beginPath?(): void;
+  closePath?(): void;
+  rect?(x: number, y: number, width: number, height: number): void;
+  arc?(x: number, y: number, radius: number, startAngle: number, endAngle: number): void;
+  clip?(): void;
   globalAlpha: number;
   fillStyle: string;
 }
@@ -33,6 +38,7 @@ export class CanvasRenderer implements Renderer {
       this.context.save();
       this.context.translate(bounds.x, bounds.y);
       this.context.rotate((bounds.rotation * Math.PI) / 180);
+      this.applyClip(component.definition.zones);
 
       const layers = [...component.definition.layers].sort((a, b) => a.order - b.order);
       if (layers.length === 0) {
@@ -57,6 +63,23 @@ export class CanvasRenderer implements Renderer {
       }
 
       this.context.restore();
+    }
+  }
+
+  private applyClip(zones: RenderFrame["components"][number]["definition"]["zones"]): void {
+    const zone = zones.find((candidate) => candidate.clip);
+    if (!zone || !this.context.beginPath || !this.context.clip) {
+      return;
+    }
+
+    if (zone.shape.type === "rectangle" && this.context.rect) {
+      this.context.beginPath();
+      this.context.rect(zone.shape.x, zone.shape.y, zone.shape.width, zone.shape.height);
+      this.context.clip();
+    } else if (zone.shape.type === "circle" && this.context.arc) {
+      this.context.beginPath();
+      this.context.arc(zone.shape.cx, zone.shape.cy, zone.shape.radius, 0, Math.PI * 2);
+      this.context.clip();
     }
   }
 }

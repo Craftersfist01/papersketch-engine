@@ -26,8 +26,11 @@ export class SvgRenderer implements Renderer {
   ) {}
 
   public render(frame: RenderFrame): void {
-    const components = frame.components.map((component) => {
+    const definitions: string[] = [];
+    const components = frame.components.map((component, index) => {
       const { bounds } = component.definition;
+      const clipZone = component.definition.zones.find((zone) => zone.clip);
+      const clipId = `clip-${index}`;
       const layers = [...component.definition.layers]
         .filter((layer) => layer.visible)
         .sort((a, b) => a.order - b.order);
@@ -40,12 +43,29 @@ export class SvgRenderer implements Renderer {
               ? `<image href="${escapeXml(source)}" width="${bounds.width}" height="${bounds.height}" opacity="${layer.opacity}"/>`
               : `<rect width="${bounds.width}" height="${bounds.height}" fill="#d9d9d9" opacity="${layer.opacity}"/>`;
           }).join("");
+      const clipPath = clipZone
+        ? `<clipPath id="${clipId}">${this.renderZoneShape(clipZone.shape)}</clipPath>`
+        : "";
+      if (clipPath) {
+        definitions.push(clipPath);
+      }
+      const clipAttribute = clipZone ? ` clip-path="url(#${clipId})"` : "";
 
-      return `<g data-component-id="${escapeXml(component.id)}" transform="translate(${bounds.x} ${bounds.y}) rotate(${bounds.rotation})">${content}</g>`;
+      return `${clipPath}<g data-component-id="${escapeXml(component.id)}" transform="translate(${bounds.x} ${bounds.y}) rotate(${bounds.rotation})"${clipAttribute}>${content}</g>`;
     }).join("");
 
     this.target.setMarkup(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${this.options.width}" height="${this.options.height}" data-project-id="${escapeXml(frame.projectId)}">${components}</svg>`
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${this.options.width}" height="${this.options.height}" data-project-id="${escapeXml(frame.projectId)}"><defs>${definitions.join("")}</defs>${components}</svg>`
     );
+  }
+
+  private renderZoneShape(shape: RenderFrame["components"][number]["definition"]["zones"][number]["shape"]): string {
+    if (shape.type === "rectangle") {
+      return `<rect x="${shape.x}" y="${shape.y}" width="${shape.width}" height="${shape.height}"/>`;
+    }
+    if (shape.type === "circle") {
+      return `<circle cx="${shape.cx}" cy="${shape.cy}" r="${shape.radius}"/>`;
+    }
+    return `<path d="${escapeXml(shape.data)}"/>`;
   }
 }

@@ -11,6 +11,9 @@ describe("CanvasRenderer", () => {
       save: vi.fn(),
       rotate: vi.fn(),
       translate: vi.fn(),
+      beginPath: vi.fn(),
+      rect: vi.fn(),
+      clip: vi.fn(),
       globalAlpha: 1,
       fillStyle: ""
     };
@@ -34,7 +37,13 @@ describe("CanvasRenderer", () => {
               { id: "hidden", name: "Hidden", order: 0, visible: false, opacity: 1 },
               { id: "base", name: "Base", order: 1, visible: true, opacity: 0.8 }
             ],
-            zones: []
+            zones: [{
+              id: "clip",
+              name: "Clip",
+              kind: "mask" as const,
+              shape: { type: "rectangle" as const, x: 0, y: 0, width: 80, height: 30 },
+              clip: true
+            }]
           }
         }
       ]
@@ -42,6 +51,8 @@ describe("CanvasRenderer", () => {
 
     expect(context.clearRect).toHaveBeenCalledWith(0, 0, 800, 600);
     expect(context.translate).toHaveBeenCalledWith(10, 20);
+    expect(context.rect).toHaveBeenCalledWith(0, 0, 80, 30);
+    expect(context.clip).toHaveBeenCalledTimes(1);
     expect(context.fillRect).toHaveBeenCalledWith(0, 0, 100, 40);
     expect(context.fillRect).toHaveBeenCalledTimes(1);
     expect(context.restore).toHaveBeenCalledTimes(1);

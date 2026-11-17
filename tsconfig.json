@@ -12,7 +12,8 @@
     { "path": "./packages/renderer-canvas" },
     { "path": "./packages/renderer-svg" },
     { "path": "./packages/input" },
-    { "path": "./packages/drawing" }
+    { "path": "./packages/drawing" },
+    { "path": "./packages/animation" }
   ]
 }
 
