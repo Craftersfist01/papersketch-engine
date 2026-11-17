@@ -25,6 +25,12 @@ the drawing layer with a validated color palette and a dedicated eraser mask.
 `animation` provides a renderer-neutral scheduler. Clipping remains data-driven:
 SVG supports all schema zone shapes, while Canvas applies rectangle and circle zones
 through the browser context's native clipping primitives.
+The animation package also provides bounded layer-state transitions with linear,
+ease-in, ease-out, and ease-in-out interpolation.
+
+`input` keeps independent pointer sessions for draw, pan, and select actions.
+Sessions enforce monotonic timestamps and a finite sample limit so a lost pointer
+cannot create unbounded memory growth.
 
 `editor` owns document editing and history but has no dependency on Runtime or
 browser UI frameworks. Editor changes are validated through the project schema before
