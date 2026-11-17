@@ -42,4 +42,55 @@ describe("SvgRenderer", () => {
     expect(markup).toContain('<defs><clipPath id="clip-0"><circle cx="50" cy="20" r="20"/></clipPath></defs>');
     expect(markup).toContain('clip-path="url(#clip-0)"');
   });
+
+  it("rejects executable asset sources", () => {
+    const renderer = new SvgRenderer(
+      { setMarkup: () => undefined },
+      {
+        width: 100,
+        height: 100,
+        assetStore: {
+          get: () => ({
+            definition: {
+              id: "asset",
+              name: "Asset",
+              type: "svg",
+              source: "javascript:alert(1)"
+            },
+            data: undefined
+          }),
+          load: async () => {
+            throw new Error("not used");
+          },
+          preload: async () => [],
+          clear: () => undefined
+        }
+      }
+    );
+
+    expect(() => renderer.render({
+      projectId: "demo",
+      deltaMs: 0,
+      elapsedMs: 0,
+      components: [{
+        id: "component",
+        state: "normal",
+        definition: {
+          id: "component",
+          name: "Component",
+          functionKey: "demo",
+          bounds: { x: 0, y: 0, width: 10, height: 10, rotation: 0 },
+          layers: [{
+            id: "layer",
+            name: "Layer",
+            order: 0,
+            visible: true,
+            opacity: 1,
+            assetId: "asset"
+          }],
+          zones: []
+        }
+      }]
+    })).toThrow("Unsafe SVG asset source");
+  });
 });

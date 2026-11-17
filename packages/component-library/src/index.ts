@@ -7,6 +7,13 @@ import {
 
 const BUNDLE_FORMAT = "papersketch-component";
 const BUNDLE_VERSION = 1 as const;
+const MAX_BUNDLE_BYTES = 10 * 1024 * 1024;
+
+function assertSafeAssetId(assetId: string): void {
+  if (!/^[A-Za-z0-9._-]+$/.test(assetId)) {
+    throw new TypeError(`Unsafe component asset id "${assetId}"`);
+  }
+}
 
 export interface ComponentBundle {
   readonly format: typeof BUNDLE_FORMAT;
@@ -32,6 +39,11 @@ function validateBundle(bundle: unknown): asserts bundle is Omit<ComponentBundle
   if (!Array.isArray(value.assets)) {
     throw new TypeError("Component bundle assets must be an array");
   }
+  value.assets.forEach((asset) => {
+    if (typeof asset === "object" && asset !== null && "id" in asset && typeof asset.id === "string") {
+      assertSafeAssetId(asset.id);
+    }
+  });
 
   parseProjectManifest({
     schemaVersion: 2,
@@ -47,6 +59,7 @@ export class ComponentLibrary {
   private readonly entries = new Map<string, ComponentLibraryEntry>();
 
   public add(entry: ComponentLibraryEntry): void {
+    entry.assets.forEach((asset) => assertSafeAssetId(asset.id));
     parseProjectManifest({
       schemaVersion: 2,
       id: "component-library",
@@ -86,20 +99,41 @@ export class ComponentLibrary {
       "manifest.json": strToU8(JSON.stringify(manifest))
     };
     for (const asset of entry.assets) {
+      assertSafeAssetId(asset.id);
       const data = assetData[asset.id];
       if (data) {
         files[`assets/${asset.id}`] = data;
       }
     }
-    return zipSync(files);
+    const result = zipSync(files);
+    if (result.byteLength > MAX_BUNDLE_BYTES) {
+      throw new RangeError("Component bundle exceeds the 10 MiB size limit");
+    }
+    return result;
   }
 
   public importZip(data: Uint8Array): ComponentBundle {
+    if (data.byteLength > MAX_BUNDLE_BYTES) {
+      throw new RangeError("Component bundle exceeds the 10 MiB size limit");
+    }
     let files: Record<string, Uint8Array>;
     try {
       files = unzipSync(data);
     } catch (error) {
       throw new TypeError(`Component bundle ZIP is invalid: ${String(error)}`);
+    }
+    const uncompressedBytes = Object.values(files)
+      .reduce((total, file) => total + file.byteLength, 0);
+    if (uncompressedBytes > MAX_BUNDLE_BYTES) {
+      throw new RangeError("Component bundle contents exceed the 10 MiB size limit");
+    }
+    for (const path of Object.keys(files)) {
+      if (path !== "manifest.json" && !path.startsWith("assets/")) {
+        throw new TypeError(`Component bundle contains an unsupported file "${path}"`);
+      }
+      if (path.startsWith("assets/")) {
+        assertSafeAssetId(path.slice("assets/".length));
+      }
     }
     const manifestFile = files["manifest.json"];
     if (!manifestFile) {

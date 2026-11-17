@@ -32,13 +32,16 @@ elements, keeping the editor core portable across web and desktop shells.
 preview full-screen on the iPad, mirrors committed and active strokes plus the
 PC-selected style, and sends only normalized pointer input back to the host.
 `websocket-transport` binds that protocol to browser-compatible WebSocket objects
-and provides QR-ready connection descriptors without coupling the protocol to a
-specific WebSocket server implementation. Its optional Node host validates the
-descriptor token before exposing an accepted connection as a `MessageTransport`.
+and provides QR-ready connection descriptors without importing Node APIs.
+`websocket-host` is the separate Node-only package that validates the descriptor
+token before exposing an accepted connection as a `MessageTransport`.
 `connection-ui` exposes framework-neutral models for rendering the host QR code
 and driving the iPad scan/connect state machine.
 It also provides optional browser DOM adapters for QR rendering, camera scanning,
 connection status, and binding preview updates to a canvas.
+Network payloads have configurable size limits and optional structured error
+reporting. The Node-only `websocket-host` package is deliberately separate from
+the browser-compatible transport package.
 `reference-game` is the integration sample: it consumes normalized iPad pointer
 events, builds deterministic strokes, publishes the full-screen preview, and
 starts the runtime without coupling the runtime to editor UI.

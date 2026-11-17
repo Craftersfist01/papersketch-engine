@@ -19,6 +19,18 @@ function escapeXml(value: string): string {
     .replaceAll(">", "&gt;");
 }
 
+function assertSafeImageSource(source: string): void {
+  const normalized = source.trim().toLowerCase();
+  if (
+    normalized.startsWith("javascript:")
+    || normalized.startsWith("vbscript:")
+    || normalized.startsWith("data:text/html")
+    || normalized.startsWith("data:application/javascript")
+  ) {
+    throw new TypeError("Unsafe SVG asset source");
+  }
+}
+
 export class SvgRenderer implements Renderer {
   public constructor(
     private readonly target: SvgTarget,
@@ -39,6 +51,9 @@ export class SvgRenderer implements Renderer {
         : layers.map((layer) => {
             const asset = layer.assetId ? this.options.assetStore?.get(layer.assetId) : undefined;
             const source = asset?.definition.source;
+            if (source) {
+              assertSafeImageSource(source);
+            }
             return source
               ? `<image href="${escapeXml(source)}" width="${bounds.width}" height="${bounds.height}" opacity="${layer.opacity}"/>`
               : `<rect width="${bounds.width}" height="${bounds.height}" fill="#d9d9d9" opacity="${layer.opacity}"/>`;

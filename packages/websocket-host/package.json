@@ -1,0 +1,14 @@
+{
+  "name": "@papersketch/websocket-host",
+  "version": "0.1.0",
+  "description": "Node-only token-protected LAN WebSocket host.",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "dependencies": {
+    "@papersketch/websocket-transport": "0.1.0",
+    "ws": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.2"
+  }
+}

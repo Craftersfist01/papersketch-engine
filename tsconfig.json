@@ -19,6 +19,7 @@
     { "path": "./packages/editor-ui" },
     { "path": "./packages/networking" },
     { "path": "./packages/websocket-transport" },
+    { "path": "./packages/websocket-host" },
     { "path": "./packages/connection-ui" },
     { "path": "./packages/reference-game" },
     { "path": "./packages/ipad-bridge" },
