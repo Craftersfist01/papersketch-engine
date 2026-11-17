@@ -1,0 +1,12 @@
+{
+  "name": "@papersketch/ipad-bridge",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "dependencies": {
+    "@papersketch/drawing": "0.1.0",
+    "@papersketch/input": "0.1.0",
+    "@papersketch/networking": "0.1.0"
+  }
+}
+

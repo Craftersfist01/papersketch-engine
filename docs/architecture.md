@@ -28,6 +28,11 @@ they become the current immutable project snapshot.
 versioned ZIP format. `editor-ui` exposes presentation models rather than DOM
 elements, keeping the editor core portable across web and desktop shells.
 
+`networking` defines a transport-neutral JSON envelope. `ipad-bridge` keeps the
+preview full-screen on the iPad, mirrors committed and active strokes plus the
+PC-selected style, and sends only normalized pointer input back to the host.
+The host can later bind the transport to WebSocket without changing the protocol.
+
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
 ## Initial decisions

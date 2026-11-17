@@ -23,6 +23,8 @@ Phase 7 adds framework-neutral editor selection, property editing, hit testing,
 and undo/redo.
 Phase 8 adds validated component bundles with ZIP import/export and a UI-neutral
 property-panel model.
+Phase 9 adds typed game events/state plus a transport-neutral iPad bridge with
+full-screen preview synchronization and PC-controlled drawing style.
 
 ## Commands
 
