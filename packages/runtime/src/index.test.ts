@@ -5,10 +5,12 @@ describe("createRuntime", () => {
   it("renders once when started and does not depend on editor code", () => {
     const renderer = { render: vi.fn() };
     const project = {
-      schemaVersion: 1 as const,
+      schemaVersion: 2 as const,
       id: "demo",
       name: "Demo",
-      scenes: []
+      scenes: [],
+      components: [],
+      assets: []
     };
     const runtime = createRuntime(project, renderer);
 
