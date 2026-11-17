@@ -13,6 +13,9 @@ It also validates asset and component references and provides migrations between
 and SVG renderer packages consume the engine's `RenderFrame` contract and remain
 replaceable implementations.
 
+`input` normalizes browser pointer data without importing browser globals. `drawing`
+stores serializable stroke data and uses explicit seeds for reproducible brush output.
+
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
 ## Initial decisions
