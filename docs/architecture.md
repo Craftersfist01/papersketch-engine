@@ -33,7 +33,8 @@ preview full-screen on the iPad, mirrors committed and active strokes plus the
 PC-selected style, and sends only normalized pointer input back to the host.
 `websocket-transport` binds that protocol to browser-compatible WebSocket objects
 and provides QR-ready connection descriptors without coupling the protocol to a
-specific WebSocket server implementation.
+specific WebSocket server implementation. Its optional Node host validates the
+descriptor token before exposing an accepted connection as a `MessageTransport`.
 
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 

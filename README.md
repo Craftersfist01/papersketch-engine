@@ -27,6 +27,8 @@ Phase 9 adds typed game events/state plus a transport-neutral iPad bridge with
 full-screen preview synchronization and PC-controlled drawing style.
 Phase 10 adds a browser-compatible WebSocket transport and QR-ready LAN
 connection descriptors for connecting the iPad bridge.
+Phase 11 adds a Node LAN WebSocket host with token-gated connections and
+descriptor-to-URL conversion.
 
 ## Commands
 

@@ -1,4 +1,6 @@
 import type { MessageTransport } from "@papersketch/networking";
+import type { IncomingMessage } from "node:http";
+import { WebSocketServer, type WebSocket } from "ws";
 
 export const CONNECTION_DESCRIPTOR_VERSION = 1 as const;
 
@@ -121,4 +123,66 @@ export function parseConnectionDescriptor(payload: string): ConnectionDescriptor
     (value as { url: string }).url,
     (value as { token: string }).token
   );
+}
+
+export function createConnectionUrl(descriptor: ConnectionDescriptor): string {
+  const validated = createConnectionDescriptor(descriptor.url, descriptor.token);
+  const url = new URL(validated.url);
+  url.searchParams.set("token", validated.token);
+  return url.toString();
+}
+
+export interface LanHostOptions {
+  readonly host?: string;
+  readonly port?: number;
+  readonly token: string;
+  readonly onConnection: (transport: WebSocketTransport) => void;
+}
+
+export class LanWebSocketHost {
+  private readonly server: WebSocketServer;
+  private readonly listening: Promise<void>;
+
+  public constructor(options: LanHostOptions) {
+    if (options.token.length === 0) {
+      throw new TypeError("LAN host token must not be empty");
+    }
+
+    this.server = new WebSocketServer({
+      host: options.host ?? "0.0.0.0",
+      port: options.port ?? 0,
+      verifyClient: ({ req }: { readonly req: IncomingMessage }) => {
+        const requestUrl = new URL(req.url ?? "/", "http://localhost");
+        return requestUrl.searchParams.get("token") === options.token;
+      }
+    });
+    this.listening = new Promise((resolve, reject) => {
+      this.server.once("listening", resolve);
+      this.server.once("error", reject);
+    });
+    this.server.on("connection", (socket: WebSocket) => {
+      options.onConnection(new WebSocketTransport(socket));
+    });
+  }
+
+  public ready(): Promise<void> {
+    return this.listening;
+  }
+
+  public getAddress(): { readonly host: string; readonly port: number } {
+    const address = this.server.address();
+    if (address === null || typeof address === "string") {
+      throw new Error("LAN WebSocket host is not listening");
+    }
+    return {
+      host: address.address,
+      port: address.port
+    };
+  }
+
+  public close(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.server.close((error) => error === undefined ? resolve() : reject(error));
+    });
+  }
 }
