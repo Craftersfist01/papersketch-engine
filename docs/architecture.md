@@ -20,6 +20,10 @@ stores serializable stroke data and uses explicit seeds for reproducible brush o
 SVG supports all schema zone shapes, while Canvas applies rectangle and circle zones
 through the browser context's native clipping primitives.
 
+`editor` owns document editing and history but has no dependency on Runtime or
+browser UI frameworks. Editor changes are validated through the project schema before
+they become the current immutable project snapshot.
+
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
 ## Initial decisions
