@@ -57,4 +57,45 @@ describe("CanvasRenderer", () => {
     expect(context.fillRect).toHaveBeenCalledTimes(1);
     expect(context.restore).toHaveBeenCalledTimes(1);
   });
+
+  it("renders deterministic brush marks and eraser compositing", () => {
+    const context = {
+      clearRect: vi.fn(),
+      drawImage: vi.fn(),
+      fillRect: vi.fn(),
+      restore: vi.fn(),
+      save: vi.fn(),
+      rotate: vi.fn(),
+      translate: vi.fn(),
+      beginPath: vi.fn(),
+      ellipse: vi.fn(),
+      fill: vi.fn(),
+      globalAlpha: 1,
+      globalCompositeOperation: "source-over",
+      fillStyle: ""
+    };
+    const renderer = new CanvasRenderer(context, { width: 100, height: 100 });
+
+    renderer.render({
+      projectId: "demo",
+      deltaMs: 16,
+      elapsedMs: 16,
+      components: [],
+      strokes: [{
+        id: "pencil",
+        seed: 1,
+        brush: { kind: "pencil", size: 4, opacity: 1, density: 1, color: "#123456" },
+        points: [{ x: 10, y: 20, pressure: 1, tiltX: 10, tiltY: 0, timeMs: 0 }]
+      }, {
+        id: "eraser",
+        seed: 2,
+        brush: { kind: "eraser", size: 6, opacity: 0, density: 1 },
+        points: [{ x: 15, y: 20, pressure: 1, tiltX: 0, tiltY: 0, timeMs: 0 }]
+      }]
+    });
+
+    expect(context.ellipse).toHaveBeenCalledTimes(2);
+    expect(context.fill).toHaveBeenCalledTimes(2);
+    expect(context.globalCompositeOperation).toBe("destination-out");
+  });
 });

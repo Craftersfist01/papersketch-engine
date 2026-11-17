@@ -11,6 +11,7 @@ export interface BrushDefinition {
   readonly size: number;
   readonly opacity: number;
   readonly density: number;
+  readonly color?: string;
   readonly profile?: Partial<BrushProfile>;
 }
 

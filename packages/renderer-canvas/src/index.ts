@@ -1,4 +1,5 @@
 import type { AssetStore } from "@papersketch/assets";
+import { generateBrushMarks, type BrushMark, type Stroke } from "@papersketch/drawing";
 import type { RenderFrame, Renderer } from "@papersketch/engine-core";
 
 export interface CanvasContextLike {
@@ -13,8 +14,11 @@ export interface CanvasContextLike {
   closePath?(): void;
   rect?(x: number, y: number, width: number, height: number): void;
   arc?(x: number, y: number, radius: number, startAngle: number, endAngle: number): void;
+  ellipse?(x: number, y: number, radiusX: number, radiusY: number, rotation: number, startAngle: number, endAngle: number): void;
+  fill?(): void;
   clip?(): void;
   globalAlpha: number;
+  globalCompositeOperation?: string;
   fillStyle: string;
 }
 
@@ -64,6 +68,39 @@ export class CanvasRenderer implements Renderer {
 
       this.context.restore();
     }
+    this.renderStrokes(frame.strokes ?? []);
+  }
+
+  private renderStrokes(strokes: readonly Stroke[]): void {
+    for (const stroke of strokes) {
+      const marks = generateBrushMarks(stroke);
+      this.context.save();
+      this.context.fillStyle = stroke.brush.color ?? "#222222";
+      for (const mark of marks) {
+        this.context.globalAlpha = mark.alpha;
+        if (mark.erase && this.context.globalCompositeOperation !== undefined) {
+          this.context.globalCompositeOperation = "destination-out";
+        }
+        this.renderMark(mark);
+      }
+      this.context.restore();
+    }
+  }
+
+  private renderMark(mark: BrushMark): void {
+    const radius = mark.size / 2;
+    const radiusY = radius * (1 + (1 - mark.hardness) * 0.6);
+    if (this.context.beginPath && this.context.fill) {
+      this.context.beginPath();
+      if (this.context.ellipse) {
+        this.context.ellipse(mark.x, mark.y, radius, radiusY, mark.rotation, 0, Math.PI * 2);
+      } else if (this.context.arc) {
+        this.context.arc(mark.x, mark.y, radius, 0, Math.PI * 2);
+      }
+      this.context.fill();
+      return;
+    }
+    this.context.fillRect(mark.x - radius, mark.y - radiusY, mark.size, radiusY * 2);
   }
 
   private applyClip(zones: RenderFrame["components"][number]["definition"]["zones"]): void {

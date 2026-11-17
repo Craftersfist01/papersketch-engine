@@ -3,6 +3,7 @@ import type {
   ProjectManifest,
   SceneDefinition
 } from "@papersketch/project-schema";
+import type { Stroke } from "@papersketch/drawing";
 
 export interface EngineClock {
   readonly now: () => number;
@@ -30,6 +31,7 @@ export interface RenderFrame {
   readonly components: readonly ComponentInstance[];
   readonly deltaMs: number;
   readonly elapsedMs: number;
+  readonly strokes?: readonly Stroke[];
 }
 
 export interface EngineHost {

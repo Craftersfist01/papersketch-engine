@@ -18,6 +18,10 @@ stores serializable stroke data and uses explicit seeds for reproducible brush o
 Its brush profiles apply pressure, tilt, velocity, grain, hardness, and eraser
 semantics while keeping generated marks deterministic.
 
+`engine-core` carries optional serializable strokes on `RenderFrame`. Canvas renders
+marks as rotated ellipses and applies erasers through `destination-out`; SVG renders
+the drawing layer with a validated color palette and a dedicated eraser mask.
+
 `animation` provides a renderer-neutral scheduler. Clipping remains data-driven:
 SVG supports all schema zone shapes, while Canvas applies rectangle and circle zones
 through the browser context's native clipping primitives.
