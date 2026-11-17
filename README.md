@@ -20,7 +20,7 @@ and device-specific adapters.
 - Runtime scenes, component instances, deterministic ticks, animation, and
   renderer-neutral `RenderFrame` contracts.
 - Cached asset loading plus Canvas and SVG renderers.
-- Normalized pointer input and deterministic seeded brush generation.
+- Normalized pointer input and deterministic seeded brush generation with pencil, charcoal, fineliner, and eraser profiles.
 - Editor selection, hit testing, property editing, and undo/redo.
 - Validated component ZIP bundles with optional embedded assets.
 - Typed Game SDK events and state.
@@ -41,7 +41,7 @@ and device-specific adapters.
 | `@papersketch/renderer-canvas` | Canvas 2D rendering and clipping |
 | `@papersketch/renderer-svg` | SVG rendering, asset references, and clipping |
 | `@papersketch/input` | Device-independent pointer normalization |
-| `@papersketch/drawing` | Serializable strokes and deterministic brush marks |
+| `@papersketch/drawing` | Serializable strokes and deterministic pressure-/tilt-aware brush marks |
 | `@papersketch/animation` | Renderer-neutral animation scheduling |
 | `@papersketch/editor` | Editing state, hit testing, and undo/redo |
 | `@papersketch/editor-ui` | Framework-neutral property-panel models |
