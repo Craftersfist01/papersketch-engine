@@ -1,0 +1,11 @@
+{
+  "name": "@papersketch/renderer-canvas",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "dependencies": {
+    "@papersketch/assets": "0.1.0",
+    "@papersketch/engine-core": "0.1.0"
+  }
+}
+
