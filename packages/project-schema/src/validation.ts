@@ -42,6 +42,12 @@ function validateBounds(value: unknown, path: string, errors: string[]): value i
       errors.push(`${path}.${key} must be a finite number`);
     }
   }
+  if (isFiniteNumber(value.width) && value.width < 0) {
+    errors.push(`${path}.width must not be negative`);
+  }
+  if (isFiniteNumber(value.height) && value.height < 0) {
+    errors.push(`${path}.height must not be negative`);
+  }
 
   return true;
 }
@@ -58,6 +64,12 @@ function validateZoneShape(value: unknown, path: string, errors: string[]): valu
         errors.push(`${path}.${key} must be a finite number`);
       }
     }
+    if (isFiniteNumber(value.width) && value.width < 0) {
+      errors.push(`${path}.width must not be negative`);
+    }
+    if (isFiniteNumber(value.height) && value.height < 0) {
+      errors.push(`${path}.height must not be negative`);
+    }
     return true;
   }
 
@@ -66,6 +78,9 @@ function validateZoneShape(value: unknown, path: string, errors: string[]): valu
       if (!isFiniteNumber(value[key])) {
         errors.push(`${path}.${key} must be a finite number`);
       }
+    }
+    if (isFiniteNumber(value.radius) && value.radius < 0) {
+      errors.push(`${path}.radius must not be negative`);
     }
     return true;
   }
@@ -143,12 +158,14 @@ function validateComponent(
         errors.push(`${path}.layers[${index}].assetId references an unknown asset`);
       }
     });
+    validateUniqueIds(value.layers, `${path}.layers`, errors);
   }
 
   if (!Array.isArray(value.zones)) {
     errors.push(`${path}.zones must be an array`);
   } else {
     value.zones.forEach((zone, index) => validateZone(zone, `${path}.zones[${index}]`, errors));
+    validateUniqueIds(value.zones, `${path}.zones`, errors);
   }
 
   return true;
@@ -165,11 +182,16 @@ function validateScene(value: unknown, path: string, componentIds: ReadonlySet<s
   if (!Array.isArray(value.rootComponentIds)) {
     errors.push(`${path}.rootComponentIds must be an array`);
   } else {
+    const rootIds = new Set<string>();
     value.rootComponentIds.forEach((id, index) => {
       if (!isString(id)) {
         errors.push(`${path}.rootComponentIds[${index}] must be a non-empty string`);
       } else if (!componentIds.has(id)) {
         errors.push(`${path}.rootComponentIds[${index}] references an unknown component`);
+      } else if (rootIds.has(id)) {
+        errors.push(`${path}.rootComponentIds[${index}] duplicates "${id}"`);
+      } else {
+        rootIds.add(id);
       }
     });
   }

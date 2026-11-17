@@ -69,14 +69,40 @@ describe("project schema", () => {
       schemaVersion: 1 as const,
       id: "legacy",
       name: "Legacy",
-      scenes: []
+      scenes: [{ id: "menu", name: "Menu", rootComponentIds: ["play-button"] }]
     };
 
-    expect(migrateProjectManifest(legacy)).toEqual({
-      ...legacy,
-      schemaVersion: 2,
-      components: [],
-      assets: []
-    });
+    const migrated = migrateProjectManifest(legacy);
+
+    expect(migrated.schemaVersion).toBe(2);
+    expect(migrated.components).toEqual([{
+      id: "play-button",
+      name: "play-button",
+      functionKey: "play-button",
+      bounds: { x: 0, y: 0, width: 0, height: 0, rotation: 0 },
+      layers: [],
+      zones: []
+    }]);
+    expect(migrated.scenes).toEqual(legacy.scenes);
+  });
+
+  it("rejects negative dimensions and duplicate layer identifiers", () => {
+    const invalid = {
+      ...validProject,
+      components: [{
+        ...validProject.components[0],
+        bounds: { ...validProject.components[0].bounds, width: -1 },
+        layers: [
+          ...validProject.components[0].layers,
+          validProject.components[0].layers[0]
+        ]
+      }]
+    };
+
+    const result = validateProjectManifest(invalid);
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("components[0].bounds.width must not be negative");
+    expect(result.errors).toContain('components[0].layers[1].id duplicates "base"');
   });
 });

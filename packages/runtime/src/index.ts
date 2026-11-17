@@ -73,11 +73,11 @@ export function createRuntime(project: ProjectManifest, renderer: Renderer): Eng
       running = false;
     },
     tick(deltaMs: number) {
-      if (!running) {
-        return;
-      }
       if (!Number.isFinite(deltaMs) || deltaMs < 0) {
         throw new RangeError("deltaMs must be a non-negative finite number");
+      }
+      if (!running) {
+        return;
       }
 
       elapsedMs += deltaMs;

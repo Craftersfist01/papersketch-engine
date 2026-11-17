@@ -37,6 +37,9 @@ export interface BrushMark {
 }
 
 export function createSeededRandom(seed: number): () => number {
+  if (!Number.isFinite(seed)) {
+    throw new RangeError("Brush seed must be a finite number");
+  }
   let state = seed >>> 0;
   return () => {
     state = (Math.imul(1664525, state) + 1013904223) >>> 0;
@@ -44,7 +47,34 @@ export function createSeededRandom(seed: number): () => number {
   };
 }
 
+function validateStroke(stroke: Stroke): void {
+  if (!Number.isFinite(stroke.seed)) {
+    throw new RangeError("Brush seed must be a finite number");
+  }
+  if (!Number.isFinite(stroke.brush.size) || stroke.brush.size <= 0) {
+    throw new RangeError("Brush size must be greater than zero");
+  }
+  if (!Number.isFinite(stroke.brush.opacity) || stroke.brush.opacity < 0 || stroke.brush.opacity > 1) {
+    throw new RangeError("Brush opacity must be between 0 and 1");
+  }
+  if (!Number.isFinite(stroke.brush.density) || stroke.brush.density <= 0) {
+    throw new RangeError("Brush density must be greater than zero");
+  }
+
+  stroke.points.forEach((point, index) => {
+    for (const value of [point.x, point.y, point.pressure, point.tiltX, point.tiltY, point.timeMs]) {
+      if (!Number.isFinite(value)) {
+        throw new RangeError(`Stroke point ${index} contains a non-finite value`);
+      }
+    }
+    if (point.pressure < 0 || point.pressure > 1) {
+      throw new RangeError(`Stroke point ${index} pressure must be between 0 and 1`);
+    }
+  });
+}
+
 export function generateBrushMarks(stroke: Stroke): readonly BrushMark[] {
+  validateStroke(stroke);
   const random = createSeededRandom(stroke.seed);
   const marks: BrushMark[] = [];
 

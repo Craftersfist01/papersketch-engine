@@ -74,7 +74,7 @@ describe("createRuntime", () => {
     const runtime = createRuntime(project, renderer);
 
     expect(() => runtime.loadScene("missing")).toThrow('Unknown scene "missing"');
-    runtime.start();
     expect(() => runtime.tick(-1)).toThrow("deltaMs must be a non-negative finite number");
+    runtime.start();
   });
 });
