@@ -33,6 +33,8 @@ Phase 12 adds framework-neutral host/iPad connection UI models with QR payload,
 connect, connected, reset, and error states.
 Phase 13 adds browser DOM integration for QR rendering, camera scanning,
 connection status, and live iPad preview canvas rendering.
+Phase 14 adds an end-to-end reference game and a release verification command
+covering runtime, Game SDK, WebSocket-ready bridge state, and pointer input.
 
 ## Commands
 

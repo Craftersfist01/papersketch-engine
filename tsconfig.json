@@ -20,6 +20,7 @@
     { "path": "./packages/networking" },
     { "path": "./packages/websocket-transport" },
     { "path": "./packages/connection-ui" },
+    { "path": "./packages/reference-game" },
     { "path": "./packages/ipad-bridge" },
     { "path": "./packages/game-sdk" }
   ]

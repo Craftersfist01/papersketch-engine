@@ -39,6 +39,9 @@ descriptor token before exposing an accepted connection as a `MessageTransport`.
 and driving the iPad scan/connect state machine.
 It also provides optional browser DOM adapters for QR rendering, camera scanning,
 connection status, and binding preview updates to a canvas.
+`reference-game` is the integration sample: it consumes normalized iPad pointer
+events, builds deterministic strokes, publishes the full-screen preview, and
+starts the runtime without coupling the runtime to editor UI.
 
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
