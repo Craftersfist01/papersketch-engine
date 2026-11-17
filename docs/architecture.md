@@ -24,6 +24,10 @@ through the browser context's native clipping primitives.
 browser UI frameworks. Editor changes are validated through the project schema before
 they become the current immutable project snapshot.
 
+`component-library` packages validated components and optional asset bytes in a
+versioned ZIP format. `editor-ui` exposes presentation models rather than DOM
+elements, keeping the editor core portable across web and desktop shells.
+
 The visual editor, renderer implementations, asset storage, networking, and reference game will be added as separate packages in later phases.
 
 ## Initial decisions

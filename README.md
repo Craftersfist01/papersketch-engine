@@ -21,6 +21,8 @@ Phase 6 adds deterministic animation scheduling and rectangle/circle/path clippi
 support for the renderers.
 Phase 7 adds framework-neutral editor selection, property editing, hit testing,
 and undo/redo.
+Phase 8 adds validated component bundles with ZIP import/export and a UI-neutral
+property-panel model.
 
 ## Commands
 
